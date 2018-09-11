@@ -1,5 +1,5 @@
 # hyprmtc
-Hypothesis prioritisation multi-trait colocalisation.
+Hypothesis Prioritisation Multi-Trait Colocalisation.
 
 # Functions
 * hyprmtc - performs multi-trait colocalisation across numerous traits.  
