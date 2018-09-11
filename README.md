@@ -1,8 +1,8 @@
 # hyprmtc
-Hypothesis Prioritisation Multi-Trait Colocalisation.
+Hypothesis Prioritisation Multi-Trait Colocalization.
 
 # Functions
-* hyprmtc - performs multi-trait colocalisation across numerous traits.  
+* hyprmtc - performs multi-trait colocalization across numerous traits.  
 
 # Installation
 1. install.packages("devtools")
@@ -14,4 +14,6 @@ Hypothesis Prioritisation Multi-Trait Colocalisation.
 betas <- hyprmtc::betas   
 ses <- hyprmtc::ses  
 corr <- hyprmtc::corr   
-hyprmtc(betas, ses, corr)  
+traits <- hyprmtc::traits  
+rsid <- hyprmtc::rsid
+hyprmtc(betas, ses, traits, rsid, corr)  
