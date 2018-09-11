@@ -11,7 +11,7 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 4. library(hyprmtc)
 
 # Example
-betas <- hyprmtc::betas 
+betas <- hyprmtc::betas  
 head(betas)  
 ses <- hyprmtc::ses  
 head(ses)  
