@@ -17,9 +17,9 @@ ses <- hyprmtc::ses
 head(ses)  
 traits <- hyprmtc::traits  
 print(traits)   
-rsid <- hyprmtc::rsid
+rsid <- hyprmtc::rsid  
 print(rsid)  
-ld <- hyprmtc::ld
+ld <- hyprmtc::ld  
 print(ld[1:5,1:5])   
 corr <- hyprmtc::corr
 print(corr)  
