@@ -21,6 +21,6 @@ rsid <- hyprmtc::rsid
 print(rsid)  
 ld <- hyprmtc::ld  
 print(ld[1:5,1:5])   
-corr <- hyprmtc::corr
+corr <- hyprmtc::corr  
 print(corr)  
 hyprmtc(betas, ses, trait.names=traits, snp.ind=rsid, ld.matrix=ld, trait.corr=corr, n.cvs=1, bb.alg=TRUE)  
