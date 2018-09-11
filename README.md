@@ -11,7 +11,7 @@ Hypothesis prioritisation multi-trait colocalisation.
 4. library(hyprmtc)
 
 # Example
-betas <- hyprmtc::betas
-ses <- hyprmtc::ses
+betas <- hyprmtc::betas   
+ses <- hyprmtc::ses  
 corr <- hyprmtc::corr   
 hyprmtc(betas, ses, corr)  
