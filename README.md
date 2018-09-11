@@ -11,9 +11,16 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 4. library(hyprmtc)
 
 # Example
-betas <- hyprmtc::betas   
+betas <- hyprmtc::betas 
+head(betas)  
 ses <- hyprmtc::ses  
-corr <- hyprmtc::corr   
+head(ses)  
 traits <- hyprmtc::traits  
+print(traits)   
 rsid <- hyprmtc::rsid
-hyprmtc(betas, ses, traits, rsid, corr)  
+print(rsid)  
+ld <- hyprmtc::ld
+print(ld[1:5,1:5])   
+corr <- hyprmtc::corr
+print(corr)  
+hyprmtc(betas, ses, trait.names=traits, snp.ind=rsid, ld.matrix=ld, trait.corr=corr, n.cvs=1, bb.alg=TRUE)  
