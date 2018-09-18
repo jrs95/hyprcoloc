@@ -1018,7 +1018,8 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]), t
   if(any(!is.na(df$regional_prob))){df$regional_prob[!is.na(df$regional_prob)] <- round(as.numeric(df$regional_prob[!is.na(df$regional_prob)]),4); df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)] <- round(as.numeric(df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)]),4)}
   if(length(df$posterior_ratio_2cvs_vs_1_or_2cvs)>0){if(any(!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs))){df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)] <- round(as.numeric(df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)]),4)}}
   if(sum(is.na(snp.scores))==0 & length(snp.scores)>0){results = list(results=df, scores=snp.scores)}else{results = list(results=df)};
-  class(results) <- "hyprmtc"; 
+  class(results) <- "hyprmtc";
+  gc()
   return(results);
 }
 
