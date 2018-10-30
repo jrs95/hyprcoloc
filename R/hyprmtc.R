@@ -184,8 +184,6 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
     reg.prob = 1;
     i = m;
     count = 0;
-    print(jmp)
-    print(reg.thresh)
     print(reg.prob)
     while(reg.prob > (1-jmp)*reg.thresh & i > 0){
       clc.trt=combn(m,i);
@@ -277,8 +275,6 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
       }
       i = i - 1;
       if(reg.steps!=0 & i == (m-reg.steps-1)){i=0;}
-      print(jmp)
-      print(reg.thresh)
       print(reg.prob)
     }
     if(jmp == 1 | sum.ABF.full.1/mx.ABF.k >= (1/min(9,m))*count){df[1,]$reg_bb_alg = TRUE;}  
