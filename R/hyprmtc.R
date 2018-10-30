@@ -194,7 +194,6 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
         if(flag==0){
           if(ind.traits == T){
             output = regional1ind(Zsq, Wsq, trt.clc);
-            print(output)
           }else{
             output = regional1(Z, W, trt.clc, trait.cor, epsilon);
           }
