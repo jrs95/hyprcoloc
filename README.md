@@ -19,4 +19,4 @@ traits <- paste0("T", 1:10)
 rsid <- rownames(betas)    
 ld <- hyprmtc::ld  
 corr <- diag(10)  
-hyprmtc(betas, ses, trait.names=traits, snp.ind=rsid, ld.matrix=ld, trait.corr=corr, n.cvs=1, bb.alg=TRUE)  
+hyprmtc(betas, ses, trait.names=traits, snp.ind=rsid, ld.matrix=ld, trait.cor=corr, n.cvs=1, bb.alg=TRUE)  
