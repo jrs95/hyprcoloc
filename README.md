@@ -15,12 +15,12 @@ betas <- hyprmtc::betas
 head(betas)  
 ses <- hyprmtc::ses  
 head(ses)  
-traits <- hyprmtc::traits  
+traits <- paste0("T", 1:10) 
 print(traits)   
-rsid <- hyprmtc::rsid  
+rsid <- rownames(betas)
 print(rsid)  
 ld <- hyprmtc::ld  
 print(ld[1:5,1:5])   
-corr <- hyprmtc::corr  
+corr <- diag(10)
 print(corr)  
 hyprmtc(betas, ses, trait.names=traits, snp.ind=rsid, ld.matrix=ld, trait.corr=corr, n.cvs=1, bb.alg=TRUE)  
