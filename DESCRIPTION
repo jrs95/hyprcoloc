@@ -6,7 +6,7 @@ Author: Christopher Foley and James Staley
 Maintainer: James Staley <js16174@bristol.ac.uk>
 Description: This package is used to perform multi-trait colocalisation analyses using HyPrMTC. 
 Depends:
-    R (>= 3.3.0),
+    R (>= 3.4.0),
     methods
 License: GPL (>= 2)
 ByteCompile: TRUE
