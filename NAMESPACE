@@ -3,6 +3,7 @@
 S3method(print,hyprmtc)
 export(hyprmtc)
 export(samp.reduc)
+export(prior)
 export(regional1ind)
 export(regional1)
 export(regional2)
