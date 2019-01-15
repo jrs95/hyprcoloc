@@ -236,9 +236,9 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
         trt.clc = clc.trt[,j] + 0.0;
         if(flag==0){
           if(ind.traits == T){
-            output = regional.ind.1(Zsq, Wsq, trt.clc);
+            output = regionalind1(Zsq, Wsq, trt.clc);
           }else{
-            output = regional.1(Z, W, trt.clc, trait.cor, epsilon);
+            output = regional1(Z, W, trt.clc, trait.cor, epsilon);
           }
           if(i == m){
             max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
@@ -262,7 +262,7 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
             }
           }else{NAs = NAs + 1;}
         }else{
-          output = regional.2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
+          output = regional2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
           max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
           sum.ABF.1 = max.ABF.1*output[[1]][2];
           clc.max.cvs.1 = output[[1]][3];
@@ -332,7 +332,7 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
   }else{
     prior1 = I.unif*p.1.m + (1-I.unif)*prior(prior.1,prior.2, k = m);
     prior2 = I.unif*p.2.m + (1-I.unif)*prior(prior.1,prior.2, k = m)*prior(prior.3, prior.4, k = m); 
-    output = regional.2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
+    output = regional2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
     max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
     sum.ABF.1 = max.ABF.1*output[[1]][2];
     max.ABF.2 = prior2*exp(mpfr(output[[2]][1], 120));
