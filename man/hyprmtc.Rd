@@ -96,5 +96,5 @@ se <- matrix(abs(rnorm(3000)), nrow=1000, ncol=3)
 results <- hyprmtc(beta,se)
 }
 \author{
-Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <js16174@bristol.ac.uk>
+Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
 }
