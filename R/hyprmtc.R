@@ -817,7 +817,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
     W[, which(binary.outcomes==1)] = matrix(0.2 + runif(Q*length(which(binary.outcomes==1)), -0.02, 0.02), nrow=Q)/(effect.se[, which(binary.outcomes==1)]);
   }
   
-  if(n.cvs==1 & (all(trait.cor[lower.tri(trait.cor)] == 0) | ind.traits == TRUE)){
+  if(n.cvs==1 & ind.traits == TRUE){
     ind.traits = TRUE;
     Zsq = Z^2;
     Wsq = 1/(1+ W^2);
