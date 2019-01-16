@@ -821,9 +821,10 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
     ind.traits = TRUE;
     Zsq = Z^2;
     Wsq = 1/(1+ W^2);
-    if(reg.steps == 1 & test.2 == FALSE){rapid = TRUE};
+    if(reg.steps == 1 & test.2 == FALSE){rapid = FALSE}else{rapid = FALSE};
   }else{
     Zsq = Wsq = sparseMatrix(i=1, j=1, dims=c(Q,m));
+    rapid = FALSE
   }
   
   if(isTRUE(test.2)){
