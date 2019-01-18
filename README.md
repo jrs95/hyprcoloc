@@ -11,12 +11,12 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 4. library(hyprmtc)
 
 # Example
-betas <- hyprmtc::betas  
+betas <- hyprmtc::test.betas  
 head(betas)  
-ses <- hyprmtc::ses  
+ses <- hyprmtc::test.ses  
 head(ses)  
 traits <- paste0("T", 1:10)  
 rsid <- rownames(betas)    
-ld <- hyprmtc::ld  
+ld <- hyprmtc::test.ld  
 corr <- diag(10)  
 hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, ld.matrix=ld, trait.cor=corr, n.cvs=1, bb.alg=TRUE)  
