@@ -10,7 +10,7 @@ hyprmtc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
   ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
   trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]),
   sample.overlap = matrix(rep(1, dim(effect.est)[2]^2), nrow =
-  dim(effect.est)[2]), n.cvs = 1, bb.alg = TRUE, bb.type = "fast",
+  dim(effect.est)[2]), n.cvs = 1, bb.alg = TRUE, bb.selection = "regional",
   test.2 = FALSE, reg.steps = 1, window.size = dim(effect.est)[1],
   sentinel = 0, epsilon = 0, reg.thresh = "default",
   align.thresh = "default", reg.tol = 0.699, prior.1 = 1e-04,
@@ -41,7 +41,7 @@ hyprmtc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
 
 \item{bb.alg}{branch and bound algorithm}
 
-\item{bb.type}{branch and bound algorithm type}
+\item{bb.selection}{branch and bound algorithm type}
 
 \item{reg.steps}{regional step paramter}
 
