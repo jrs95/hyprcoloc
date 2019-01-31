@@ -744,7 +744,7 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' # Colocalisation analyses
 #' results <- hyprmtc(beta,se)
 #' @export
-hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]), trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, branch.jump = FALSE, ind.traits = FALSE){
+hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]), trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = FALSE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -770,6 +770,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   prior.4 = 0.995
   reg.tol = 0.699
   cor.adj.priors = FALSE
+  branch.jump = FALSE
   
   if(uniform.priors==F & (reg.thresh == "default" | align.thresh == "default")){
     if(reg.thresh == "default"){reg.thresh = 0.5; reg.tol = 0.499;}
