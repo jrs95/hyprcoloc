@@ -712,32 +712,23 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param effect.est matrix of beta values
 #' @param effect.se matrix of se values
 #' @param binary.outcomes a binary vector depicting binary traits
-#' @param trait.subset vector of traits from the full trait list for trageted coloclaisation analysis
+#' @param trait.subset vector of traits from the full trait list for targeted coloclaisation analysis
 #' @param trait.names vector of trait names corresponding to the columns in the effect.est matrix
 #' @param snp.id vector of SNP IDs
 #' @param ld.matrix LD matrix
 #' @param trait.cor correlation matrix between traits
 #' @param sample.overlap matrix of sample overlap between traits
-#' @param n.cvs number of causal variants
 #' @param bb.alg branch and bound algorithm
 #' @param bb.selection branch and bound algorithm type
 #' @param reg.steps regional step paramter
-#' @param window.size size of window for 2CV testing
-#' @param sentinel sentinel variant
-#' @param epsilon tolerance parameter
-#' @param reg.thres regional probability threshold
+#' @param reg.thresh regional probability threshold
 #' @param align.thresh alignment probability threshold
-#' @param reg.tol regional tolerance parameter
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param prior.3 prior probability that a trait contains a second causal variant given it contains one already
-#' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
 #' @param sensitivity perform senstivity analysis
 #' @param sens.1 first sensitivity analysis
 #' @param sens.2 second sensitivity analysis
-#' @param cor.adj.priors correlation adjusted priors
-#' @param unifrom.priors uniform priors
-#' @param branch.jump branch jump
+#' @param uniform.priors uniform priors
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @return results data.frame of results
 #' @return snp.scores list of snp scores for each set of colocalised traits
@@ -753,7 +744,7 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' # Colocalisation analyses
 #' results <- hyprmtc(beta,se)
 #' @export
-hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]), trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]), n.cvs = 1, bb.alg = TRUE, bb.selection = "regional", test.2 = FALSE, reg.steps = 1, window.size = dim(effect.est)[1], sentinel = 0, epsilon = 0, reg.thresh = "default", align.thresh = "default", reg.tol = 0.699, prior.1 = 1e-4, prior.2 = 0.98, prior.3 = 1e-3, prior.4 = 0.995, sensitivity = F, sense.1 = 1, sense.2 = 2, cor.adj.priors = FALSE, uniform.priors = FALSE, branch.jump = FALSE, ind.traits = FALSE){
+hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]), trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, branch.jump = FALSE, ind.traits = FALSE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -769,6 +760,16 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   Z = effect.est/effect.se;    
   m = dim(Z)[2];
   Q = dim(Z)[1];
+  
+  n.cvs = 1
+  test.2 = FALSE
+  sentinel = 0
+  epsilon = 0
+  window.size = dim(effect.est)[1]
+  prior.3 = 1e-3
+  prior.4 = 0.995
+  reg.tol = 0.699
+  cor.adj.priors = FALSE
   
   if(uniform.priors==F & (reg.thresh == "default" | align.thresh == "default")){
     if(reg.thresh == "default"){reg.thresh = 0.5; reg.tol = 0.499;}
