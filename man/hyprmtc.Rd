@@ -10,13 +10,11 @@ hyprmtc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
   ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
   trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]),
   sample.overlap = matrix(rep(1, dim(effect.est)[2]^2), nrow =
-  dim(effect.est)[2]), n.cvs = 1, bb.alg = TRUE, bb.selection = "regional",
-  test.2 = FALSE, reg.steps = 1, window.size = dim(effect.est)[1],
-  sentinel = 0, epsilon = 0, reg.thresh = "default",
+  dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional",
+  reg.steps = 1, reg.thresh = "default",
   align.thresh = "default", reg.tol = 0.699, prior.1 = 1e-04,
-  prior.2 = 0.98, prior.3 = 0.001, prior.4 = 0.995, sensitivity = F,
-  sense.1 = 1, sense.2 = 2, cor.adj.priors = FALSE,
-  uniform.priors = TRUE, branch.jump = FALSE, ind.traits = TRUE)
+  prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2,
+  uniform.priors = TRUE, ind.traits = TRUE)
 }
 \arguments{
 \item{effect.est}{matrix of beta values}
