@@ -6,9 +6,10 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 
 # Installation
 1. install.packages("devtools")
-2. library(devtools) 
+2. library(devtools)
 3. install_github("jrs95/hyprmtc", build_vignettes=T)
 4. library(hyprmtc)
+5. browseVignettes("hyprmtc")
 
 # Example
 \# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)  
