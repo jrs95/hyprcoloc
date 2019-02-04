@@ -11,10 +11,15 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 4. library(hyprmtc)
 
 # Example
-betas <- hyprmtc::test.betas  
-head(betas)  
-ses <- hyprmtc::test.ses  
-head(ses)  
-traits <- paste0("T", 1:10)  
-rsid <- rownames(betas)    
+\# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)
+betas <- hyprmtc::test.betas
+head(betas)
+ses <- hyprmtc::test.ses
+head(ses)
+  
+\# Trait names and SNP IDs
+traits <- paste0("T", 1:10)
+rsid <- rownames(betas)
+
+\# Colocalization analysis
 hyprmtc(betas, ses, trait.names=traits, snp.id=rsid)  
