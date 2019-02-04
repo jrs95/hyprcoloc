@@ -1,0 +1,184 @@
+---
+title: "HyPrMTC"
+author: "Christopher Foley & James Staley"
+date: "31/01/2019"
+output: rmarkdown::html_vignette
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Practical 1}
+-->
+
+## Introduction
+
+HyPrMTC is Bayesian pattern recognition algorithm for identifying sets of traits which colocalize at distinct causal variants in a geneomic region. The default algorithm can identify clusters of putatively colocalized traits, within a vast collection of traits, e.g. 1000s, in seconds. For each set of putatively colocalized traits, the algorithm outputs: the names of the traits, the posterior probability of colocalization, the location of the shared putatatively causal variant and a fine-mapping probability to quantify the probability that the cadidate causal variant is causal. 
+
+Traits can be either continuous, e.g. blood pressure, or discrete, e.g. a disease. Basic analyses require information on the summarized effect estimates (i.e. estimated regression coefficients) and their corresponding standard errors, for each snp in the genomic region and each trait under consideration. These should be entered as numeric matrices. If the traits are measured in non-independent studies (i.e. those containing overlapping participants) analyses can be adjusted to account for this. To do this three matrices are required: (i) the pair-wise marginal correlations between the traits; (ii) the pair-wise LD estimates between the snps in the region and; (iii) the pair-wise estimates of the proportion of sample overlap between study participants. We strongly recommend reading our note (below and in more detail our paper) on these types of analyses before performing them. 
+
+### Installation
+
+```{r, echo=F}
+options(warn=-1)
+```
+
+```{r, eval=F}
+install.packages("devtools", repos='http://cran.us.r-project.org')
+library(devtools)
+install_github("jrs95/hyprmtc")
+```
+
+## Getting started
+
+We start by loading the package and some data needed to run analyses using HyPrMTC in the first part of this excercise. To execute a basic analysis, users need only input two matrices of equal size: (i) a matrix of effect estimates (betas), with the columns denoting the study traits and rows the snps, and; (ii) a matrix of corresponding standard errors (ses). 
+
+```{r}
+library(hyprmtc)
+betas <- hyprmtc::test.betas
+head(betas)
+ses <- hyprmtc::test.ses
+head(ses)
+```
+
+
+### Basic set-up: assuming independce between studies 
+
+By default HyPrMTC assumes that between study estimates of regression coefficients (betas) are independent and automatically uses the branch and bound selection algorithm to identify sets of colocalized traits. Studies/traits will be assigned a name corresponding to their column position and similarly snp names assigned according to row position. Alternatively users can input study/trait and snp names, e.g.     
+
+```{r}
+traits <- paste0("T", 1:dim(betas)[2])
+rsid <- rownames(betas)
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid)
+res
+```
+
+For each iteration of the algorithm, HyPrMTC outputs:
+
+(i) a set of traits putatively colocalized traits
+(ii) the posterior probability of colocalization of these traits
+(iii) the regional association probability (which is always > the posterior probability)
+(iv) a candidate causal variant explaining the shared association 
+(v) the proportion of the posterior probability explained by this variant (which represents the HyPrMTC multi-trait fine-mapping probability). 
+
+In this example, HyPrMTC identified traits 1-5 as being colocalized with posterion probability $0.999$, regional association probability $0.999$, candidate snp rs11591147 which explains 100\% of the posterior 
+
+#### Focusing on a subset of traits
+
+We can choose to analyse a subset of the traits, for example the first two traits, by typing 
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, trait.subset = c("T1","T2"));
+res
+```
+
+#### Identifying continuous and binary traits in the sample
+
+For technical reasons, analyses have a modest dependence on whether a trait is continuous or binary in the sample. To let HyPrMTC know which traits are continuous (coded 0) or binary (coded 1) we use the 'binary.outcome' variable. For example, suppose the first three traits are binary, then we type 
+
+```{r}
+binary.traits = c(1,1,1,rep(0,dim(betas)[2]-3));
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, binary.outcomes = binary.traits);
+res
+```
+
+### Branch and bound algorithm
+
+The branch and bound selection algorithm identifies sets of colocalized traits. When all traits are identified as not sharing a causal variant, the algorithm aims to identify the subset of traits with the greatest evidence of colocalization. In summary, we construct two approaches to do this: the regional or alignment selection criterium. The regional selection criterium is computed from a collection of hypotheses which assume that all traits do not colocalize because one of the traits does not have a causal variant in the region. The alignment selection criterium, however, is computed from hypotheses which assume that all traits do not colocalize because one of the traits has a causal variant elsewhere in the region. This process searches a much larger amount of the causal configuration space and is more computationally expensive, but potentially more robust, than regional selection. Typically, both strategies perform similarly and we therefore set regional selection as the default. 
+
+#### Assessing differences between the branch and bound selection criteria
+
+The regional selection criterium:   
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional");
+res
+```
+
+The alignment selection criterium:   
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "align");
+res
+```
+
+
+#### Assessing influence of prior choice and theshold parameters on performance
+
+An important feature of the HyPrMTC software is that it allows for some sensitivity to the choice of causal configuration priors to be assessed. Two prior choices are presented: (i) conditionally uniform priors, which assumes that all causal configurations relating to a given hypotheses are equally likely, and; (ii) variant specific prioris, which, for each variant, focuses on tuning the probability that a variant is colocalized with a subset of traits, for all possible subsets.    
+
+
+##### Conditionally uniform configuration priors:   
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = TRUE);
+res
+```
+
+
+##### Variant specific configuration priors (default):   
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional", uniform.priors = FALSE);
+res
+```
+
+##### Evidential strength and the regional and alignment thresholds  
+
+The default regional $P_{R}^{\ast}$ and alignment $P_{A}^{\ast}$ paramter thresholds are dependent on the choice of configuration prior. The default regional threshold and alignment thresholds using conditionally uniform (CU) configuration priors are $P_R^{\ast}=P_{A}^{\ast}=0.7$ whereas for variant specific (VS) priors the thresholds are set to  $P_R^{\ast}=P_{A}^{\ast}=0.5$. Accordingly, the algorithm will deduce that a set of traits are colocalized when  $P_RP_{A}\geq 0.49$ using CU priors and $P_RP_{A}\geq 0.25$ when using VS priors. We do this because CU priors tend to have a slightly increased false positive rate. Note, these parameter choices are a consequence of extensive testing in simulation scenarios, aiming to maximise the true detection rate whilst minimising the number of false positives. We therefore DO NOT recommend reducing either of these parameters. The defaults should be viewed as lower bounds.
+
+If interest lies in identifying sets of colocalized traits above a certain posterior probability, more stringent regional and alignment threshold parameters can be chosen, e.g.
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional", uniform.priors = FALSE, reg.thresh = 0.8, align.thresh = 0.8);
+res
+```
+
+#### Switching the algorithm off
+
+We can choose to switch the branch and bound selection algorithm off and assess whether all traits colocalize. 
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.alg = FALSE);
+res
+```
+
+### Analysing correlated traits
+
+When interest lies in identifying colocalization across a set of traits whose summary data are correlated (due to overlapping participants) three additional peices of information are required: (i) a matrix containing the putative correlation between the traits; (ii) a matrix containing the LD between the snps in the region and; (iii) a matrix containing the proprtion of shared participants between each pair of studies. Note the matrix of overlapping sample proportions has diagonal elements set to 1 and off diagonal elements $(i,j)$ denote the proportion of overlap between the $i$'th and $j$'th studies, i.e. if N denotes the total number of overlapping participants and $\{N_{i},N_{j}\}$ denote the numbers of participants in the $i$'th and $j$'th studies respectively, then $N/\left(N_{i}N_{j}\right)$ is the  $(i,j)=(j,i)$ element. As sample overlap information may not always be available, the HyPrMTC default assumes all studies have the same participants.  
+
+#### Important, before going further...
+
+Should analyses be adjusted for observed correlation between study summary data?
+
+It is our recommendation that users first consider whether this is necessary. There are several points to consider. Firstly, traits which are strongly correlated are in general more likely to colocalize. This has two important consequences: (i) whilst special exceptions exist, generally the a-priori probability of colocalization between two strongly correlated traits is necessarily larger than two traits that are weakly correlated, analyses which ignore this are less likely to capture the largest set of traits which are truley colocalized and; (ii) when a subset of traits which are truley colocalized are identified, one or more of the correlated traits can be wrongly identified as not colocalizing due to mathematical subtleties in the processing of the correlation matrices and NOT because of  some underlying biological importance, this has serious consequences on how we draw biological conclusions from correlation adjusted analyses. Secondly, analysing correlated summary data requires much more computing power and time, owing to many rounds of expensive matrix inversion. Finally, in our extensive testing, when wronly assuming independence between study data we found little to no impact on the false positive detection rate in contrast to when correctly assuming independence.  
+
+#### Analysing correlated traits, continued... 
+
+Our command line tool can automatically compute trait correlation (using a tetrachoric correlation technique) and LD information. However, the R-package requires users to have this information to hand. 
+
+```{r}
+trait.cor <- diag(1, dim(betas)[2], dim(betas)[2])#hyprmtc::test.betas
+ld.matrix <- diag(1, dim(betas)[1], dim(betas)[1])#hyprmtc::test.ses
+sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2])# default assumption, hence presented for clarity
+```
+
+##### Variant specific priors
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor, ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = FALSE);
+res
+```
+
+##### Conditionally uniform priors
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor, ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = TRUE);
+res
+```
+
+##### Assuming independence (which correctly captures the data generating model)
+
+```{r}
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid);
+res
+```
