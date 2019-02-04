@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 ---
 
 <!--
-%\VignetteEngine{knitr::rmarkdown}
+%\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{hyprmtc}
 -->
 
