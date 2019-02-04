@@ -117,7 +117,7 @@ res
 ##### Variant specific configuration priors (default):   
 
 ```{r}
-res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional", uniform.priors = FALSE);
+res <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = FALSE);
 res
 ```
 
@@ -156,9 +156,9 @@ It is our recommendation that users first consider whether this is necessary. Th
 Our command line tool can automatically compute trait correlation (using a tetrachoric correlation technique) and LD information. However, the R-package requires users to have this information to hand. 
 
 ```{r}
-trait.cor <- diag(1, dim(betas)[2], dim(betas)[2])#hyprmtc::test.betas
-ld.matrix <- diag(1, dim(betas)[1], dim(betas)[1])#hyprmtc::test.ses
-sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2])# default assumption, hence presented for clarity
+trait.cor <- hyprmtc::test.betas
+ld.matrix <- hyprmtc::test.ses
+sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2]) # default assumption, hence presented for clarity
 ```
 
 ##### Variant specific priors
