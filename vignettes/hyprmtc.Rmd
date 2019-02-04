@@ -59,7 +59,7 @@ For each iteration of the algorithm, HyPrMTC outputs:
 (iv) a candidate causal variant explaining the shared association 
 (v) the proportion of the posterior probability explained by this variant (which represents the HyPrMTC multi-trait fine-mapping probability). 
 
-In this example, HyPrMTC identified traits 1-5 as being colocalized with posterion probability $0.999$, regional association probability $0.999$, candidate snp rs11591147 which explains 100\% of the posterior 
+In this example, HyPrMTC identified traits 1-5 as being colocalized with posterion probability $1$, regional association probability $1$, candidate snp rs11591147 which explains 100\% of the posterior 
 
 #### Focusing on a subset of traits
 
