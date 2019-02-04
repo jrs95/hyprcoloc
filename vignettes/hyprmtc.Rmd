@@ -1,13 +1,13 @@
 ---
 title: "HyPrMTC"
 author: "Christopher Foley & James Staley"
-date: "31/01/2019"
+date: "04/02/2019"
 output: rmarkdown::html_vignette
 ---
 
 <!--
 %\VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{Practical 1}
+%\VignetteIndexEntry{hyprmtc}
 -->
 
 ## Introduction
