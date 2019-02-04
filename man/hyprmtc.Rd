@@ -69,12 +69,18 @@ snp.scores list of snp scores for each set of colocalised traits
 hyprmtc is a Bayesian methodology which allows users to perform multi-trait colocalisation analyses across vast numbers of traits in a genomic region. The software outputs sets of traits deemed to colocalize at distinct distinct 'causal' variants, returning a posterior probability of colocalization and pinpointing a putative causal variant for each set. To assess the quality of the multi-trait fine-mapping the proportion of posterior probability explained by the candidate causal variant for each collection is presented.  
 }
 \examples{
-# Regression coefficients and standard errors from three GWAS studies
-beta <- matrix(rnorm(3000), nrow=1000, ncol=3)
-se <- matrix(abs(rnorm(3000)), nrow=1000, ncol=3)
+# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)
+betas <- hyprmtc::test.betas
+head(betas)
+ses <- hyprmtc::test.ses
+head(ses)
+  
+# Trait names and SNP IDs
+traits <- paste0("T", 1:10)
+rsid <- rownames(betas)
 
 # Colocalisation analyses
-results <- hyprmtc(beta,se)
+results <- hyprmtc(betas, ses, trait.names=traits, snp.id=rsid)
 }
 \author{
 Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
