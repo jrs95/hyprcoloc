@@ -784,17 +784,18 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
     reg.tol = reg.thresh-0.001;
   } 
  
-  if(bb.alg == T & uniform.priors==F & (reg.thresh < 0.5 | align.thresh < 0.5)){stop("Do not run branch and bound algorithm with reg.thresh or align.thresh < 0.5 when using non-uniform priors")};
-  if(bb.alg == T & uniform.priors==T & (reg.thresh < 0.6 | align.thresh < 0.6)){stop("Do not run branch and bound algorithm with reg.thresh or align.thresh < 0.6 when using uniform priors")};
-  if(! n.cvs %in% c(1,2)){stop("Current version of HyPrMTMC is limited to assessment of a maximum of 2 CVs in a region: set n.cvs to either 1 or 2")}; 
-  if(n.cvs == 2 & window.size >= 4E2){print("Computation likely to take a long time. Consider utilising the window.size and sentinel variables to focus assessment within a specified window of a sentinel SNP, default is the lead SNP across all traits")};
-  if(sensitivity == T){bb.alg = F; print("Performing a regional probability sensitivity assessment: posterior probability of co-localisation will not be computed")};
+  if(bb.alg == T & uniform.priors==F & (reg.thresh < 0.5 | align.thresh < 0.5)){stop("do not run branch and bound algorithm with reg.thresh or align.thresh < 0.5 when using non-uniform priors")};
+  if(bb.alg == T & uniform.priors==T & (reg.thresh < 0.6 | align.thresh < 0.6)){stop("do not run branch and bound algorithm with reg.thresh or align.thresh < 0.6 when using uniform priors")};
+  if(! n.cvs %in% c(1,2)){stop("current version of HyPrMTMC is limited to assessment of a maximum of 2 CVs in a region: set n.cvs to either 1 or 2")}; 
+  if(n.cvs == 2 & window.size >= 4E2){print("computation likely to take a long time. Consider utilising the window.size and sentinel variables to focus assessment within a specified window of a sentinel SNP, default is the lead SNP across all traits")};
+  if(sensitivity == T){bb.alg = F; print("performing a regional probability sensitivity assessment: posterior probability of co-localisation will not be computed")};
   if(!(reg.steps %in% 0:m)){stop("reg.steps parameter must be an integer between 0 and number of traits m")};
-  if(!(sense.1 %in% 0:m) | !(sense.2 %in% 0:m)){stop("Sensitivity parameters must be intergers between 0 and number of traits m")};
-  if(sense.1 >= sense.2){stop("Sensitivity parameter sense.2 must be greater than sensitivity parameter sense.1")};
-  if(window.size > Q){stop("Window size cannot be larger than the number of SNPs Q in the region")}
-  if((length(trait.subset)<m & typeof(trait.subset)!="integer") & length(trait.names) < m){stop("When using character names in 'trait.subset' the variable 'trait.names' must be of length m, containing names for all traits considered")}
-  if(bb.selection == "reg.only" & reg.thresh < 0.9){warning("Posterior evaluation and the BB algorithm are based on values of the regional statistic only.\n Consider setting a larger value for the regional threshold, e.g. > 0.9, to avoid difficulties in interpreting any regional association signals.");}
+  if(!(sense.1 %in% 0:m) | !(sense.2 %in% 0:m)){stop("sensitivity parameters must be intergers between 0 and number of traits m")};
+  if(sense.1 >= sense.2){stop("sensitivity parameter sense.2 must be greater than sensitivity parameter sense.1")};
+  if(window.size > Q){stop("window size cannot be larger than the number of SNPs Q in the region")}
+  if((length(trait.subset)<m & typeof(trait.subset)!="integer") & length(trait.names) < m){stop("when using character names in 'trait.subset' the variable 'trait.names' must be of length m, containing names for all traits considered")}
+  if(bb.selection == "reg.only" & reg.thresh < 0.9){warning("posterior evaluation and the BB algorithm are based on values of the regional statistic only.\n Consider setting a larger value for the regional threshold, e.g. > 0.9, to avoid difficulties in interpreting any regional association signals.");}
+  if(all(ld.matrix[lower.tri(ld.matrix)] == 0) & !all(trait.cor[lower.tri(trait.cor)] == 0)) warning("ld.matrix is an identity matrix but trait.cor is not an identity matrix")
     
   if(class(trait.subset)=="character" & class(trait.names)=="character"){
     tmp.traits = c(1:m);
