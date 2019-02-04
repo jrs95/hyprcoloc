@@ -156,8 +156,8 @@ It is our recommendation that users first consider whether this is necessary. Th
 Our command line tool can automatically compute trait correlation (using a tetrachoric correlation technique) and LD information. However, the R-package requires users to have this information to hand. 
 
 ```{r}
-trait.cor <- hyprmtc::test.betas
-ld.matrix <- hyprmtc::test.ses
+trait.cor <- hyprmtc::test.corr
+ld.matrix <- hyprmtc::test.ld
 sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2]) # default assumption, hence presented for clarity
 ```
 
