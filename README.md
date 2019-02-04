@@ -7,7 +7,7 @@ Hypothesis Prioritisation Multi-Trait Colocalization.
 # Installation
 1. install.packages("devtools")
 2. library(devtools) 
-3. install_github("jrs95/hyprmtc")
+3. install_github("jrs95/hyprmtc", build_vignettes=T)
 4. library(hyprmtc)
 
 # Example
