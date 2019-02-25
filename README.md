@@ -8,7 +8,7 @@ Hypothesis Prioritisation in multi-trait Colocalization.
 1. install.packages("devtools")
 2. library(devtools)
 3. install_github("jrs95/hyprcoloc", build_vignettes=T)
-4. library(hyprmtc)
+4. library(hyprcoloc)
 5. browseVignettes("hyprcoloc")
 
 # Example
