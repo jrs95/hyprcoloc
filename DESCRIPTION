@@ -1,10 +1,10 @@
-Package: hyprmtc
-Title: Multi-trait colocalisation 
+Package: hyprcoloc
+Title: Hypothesis Prioritisation in multi-trait Colocalisation (HyPrColoc) analyses
 Version: 1.0
 Date: 15-01-2019
 Author: Christopher Foley and James Staley
 Maintainer: James Staley <james.staley@bristol.ac.uk>
-Description: This package is used to perform multi-trait colocalisation analyses using HyPrMTC. 
+Description: This package is used to perform multi-trait colocalisation analyses using HyPrColoc. 
 Depends: R (>= 3.4.0), methods
 License: GPL (>= 2)
 ByteCompile: TRUE
