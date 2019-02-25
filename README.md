@@ -24,3 +24,9 @@ rsid <- rownames(betas)
 
 \# Colocalization analysis  
 hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)  
+
+\# Citation
+* HyPrColoc: 
+* LD blocks:
+
+
