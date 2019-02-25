@@ -1,5 +1,5 @@
 # HyPrColoc
-Hypothesis Prioritisation in multi-trait Colocalization.
+Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) analyses.
 
 # Functions
 * hyprcoloc - performs multi-trait colocalization across numerous traits.  
