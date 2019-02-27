@@ -256,9 +256,9 @@ regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon
         trt.clc = clc.trt[,j] + 0.0;
         if(flag==0){
           if(ind.traits == T){
-            output = regional.ind.1(Zsq, Wsq, trt.clc);
+            output = regional1ind(Zsq, Wsq, trt.clc);
           }else{
-            output = regional.1(Z, W, trt.clc, trait.cor, epsilon);
+            output = regional1(Z, W, trt.clc, trait.cor, epsilon);
           }
           if(i == m){
             max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
@@ -282,7 +282,7 @@ regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon
             }
           }else{NAs = NAs + 1;}
         }else{
-          output = regional.2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
+          output = regional2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
           max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
           sum.ABF.1 = max.ABF.1*output[[1]][2];
           clc.max.cvs.1 = output[[1]][3];
@@ -352,7 +352,7 @@ regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon
   }else{
     prior1 = I.unif*p.1.m + (1-I.unif)*prior(prior.1,prior.2, k = m);
     prior2 = I.unif*p.2.m + (1-I.unif)*prior(prior.1,prior.2, k = m)*prior(prior.3, prior.4, k = m); 
-    output = regional.2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
+    output = regional2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
     max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
     sum.ABF.1 = max.ABF.1*output[[1]][2];
     max.ABF.2 = prior2*exp(mpfr(output[[2]][1], 120));
@@ -486,9 +486,9 @@ align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, re
       trt.no.clc = trt.combn[j] + 0.0;
       trt.clc = traits[-trt.no.clc] + 0.0;
       if(ind.traits==T){
-        output = align.ind.1(Zsq, Wsq, trt.clc, trt.no.clc);
+        output = align1ind(Zsq, Wsq, trt.clc, trt.no.clc);
       }else{
-        output = align.1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
+        output = align1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
       }
       max.ABF = prior.algn*exp(mpfr(output[[1]][1], 120));
       sum.ABF.tmp = max.ABF*output[[2]][1];
@@ -506,9 +506,9 @@ align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, re
     trt.no.clc = 1.0;
     trt.clc = traits[-trt.no.clc] + 0.0;
     if(ind.traits == TRUE){
-      output = align.ind.1(Zsq, Wsq, trt.clc, trt.no.clc);
+      output = align1ind(Zsq, Wsq, trt.clc, trt.no.clc);
     }else{
-      output = align.1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
+      output = align1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
     }
     max.ABF = prior.algn*exp(mpfr(output[[1]][1], 120));
     sum.ABF.tmp = max.ABF*output[[2]][1];
@@ -620,7 +620,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
   while(align.prob > align.thresh & j <=m){
     trt.no.clc = trt.combn[j] + 0.0;
     trt.clc = traits[-trt.no.clc] + 0.0;
-    output_1 = align.1.2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
+    output_1 = align12(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
     max.ABF = c(prior.no.11*exp(mpfr(output_1[[1]][1], 120)),prior.no.12*exp(mpfr(output_1[[2]][1], 120)));
     sum.ABF.no = sum(max.ABF*c(output_1[[1]][2], output_1[[2]][2]));
     if(!is.nan(sum.ABF.no)){
@@ -642,7 +642,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
         df[1,]$SNPs.clc = toString(clc.max.cvs.1)
       }
     }else{NAs = NAs + 1;}
-    output_2 = align.2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
+    output_2 = align2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
     max.ABF = c(prior.no.21*exp(mpfr(output_2[[1]][1], 120)),prior.no.22*exp(mpfr(output_2[[2]][1], 120)));
     sum.ABF.no = sum(max.ABF*c(output_2[[1]][2], output_2[[2]][2]));
     if(!is.nan(sum.ABF.no)){
