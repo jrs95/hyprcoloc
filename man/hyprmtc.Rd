@@ -14,7 +14,7 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
   reg.steps = 1, reg.thresh = "default",
   align.thresh = "default", prior.1 = 1e-04,
   prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2,
-  uniform.priors = FALSE, ind.traits = TRUE)
+  uniform.priors = FALSE, ind.traits = FALSE)
 }
 \arguments{
 \item{effect.est}{matrix of estimated regression coefficients where columns denote traits and rows variants.}
@@ -57,7 +57,7 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
 
 \item{uniform.priors}{uniform priors. Default is to use variant specific prior configuration proababilities setting uniform.prior=FALSE.}
   
-\item{ind.traits}{are the traits independent or to be treated as independent. Default ind.traits=TRUE}
+\item{ind.traits}{are the traits independent or to be treated as independent. Default ind.traits=FALSE}
 
 }
 \value{
