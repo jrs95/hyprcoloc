@@ -1,17 +1,17 @@
 # HyPrColoc
 Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) analyses.
 
-# Functions
+## Functions
 * hyprcoloc - performs multi-trait colocalization across numerous traits.  
 
-# Installation
+## Installation
 1. install.packages("devtools")
 2. library(devtools)
 3. install_github("jrs95/hyprcoloc", build_vignettes=T)
 4. library(hyprcoloc)
 5. browseVignettes("hyprcoloc")
 
-# Example
+## Example
 \# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)  
 betas <- hyprcoloc::test.betas  
 head(betas)  
@@ -25,7 +25,7 @@ rsid <- rownames(betas)
 \# Colocalization analysis  
 hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)  
 
-# Citation
+## Citation
 * HyPrColoc: 
 * LD blocks:
 
