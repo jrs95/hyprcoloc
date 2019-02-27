@@ -13,7 +13,7 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
   dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional",
   reg.steps = 1, reg.thresh = "default",
   align.thresh = "default", prior.1 = 1e-04,
-  prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2,
+  prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2,
   uniform.priors = FALSE, ind.traits = TRUE)
 }
 \arguments{
