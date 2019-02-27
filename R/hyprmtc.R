@@ -8,10 +8,13 @@
 #' @param gamma step probability
 #' @param k number of traits
 #' @export
-prior = function(p.1, gamma, k){
-  if(k==1){p.1}
-  else{i=c(2:k);G=(1-gamma^(i-1));p.1*prod(G)}
-};
+prior <- function(p.1, gamma, k){
+  if(k==1){
+    p.1;
+  }else{
+    i=c(2:k);G=(1-gamma^(i-1));p.1*prod(G);
+  }
+}
 
 ##########################################################
 ##### SNP scores #####
@@ -22,7 +25,7 @@ prior = function(p.1, gamma, k){
 #' @param j number of traits
 #' @param Q number of SNPs
 #' @export
-p.0 = function(j, Q){
+p.0 <- function(j, Q){
   (j-1)*Q - j*(j-1)/2 + 1;
 }
 
@@ -31,7 +34,7 @@ p.0 = function(j, Q){
 #' @param Q the number of traits 
 #' @param snp.scores
 #' @export
-ind.snp.score = function(Q, snp.scores){
+ind.snp.score <- function(Q, snp.scores){
   loc = vector("numeric", Q-1);
   res = vector("numeric", Q);
   for(j in 1:Q){
@@ -45,8 +48,9 @@ ind.snp.score = function(Q, snp.scores){
     }
     res[j] = sum(snp.scores[loc]);
   }
-  return(res);
+  return(res)
 }
+
 
 ##########################################################
 ##### Reduce dimensions of datasets #####
@@ -55,7 +59,7 @@ ind.snp.score = function(Q, snp.scores){
 #' samp.reduc
 #'
 #' @param Z matrix of Z-scores
-#' @param W matrix of prior variances
+#' @param W ratio matrix of prior standard deviation and observed standard errors
 #' @param ld.matrix LD matrix
 #' @param trait.cor correlation matrix between traits
 #' @param sample.overlap matrix of sample overlap between traits
@@ -63,9 +67,9 @@ ind.snp.score = function(Q, snp.scores){
 #' @param window.size size of window for 2CV testing
 #' @param sentinel sentinel variant 
 #' @param Zsq matrix of Z-scores squared
-#' @param Wsq matrix of prior variances squared
+#' @param Wsq matrix of W squared
 #' @export
-samp.reduc = function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.size = dim(Z)[1], sentinel = 0, Zsq, Wsq){
+samp.reduc <- function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.size = dim(Z)[1], sentinel = 0, Zsq, Wsq){
   
   q = dim(Z)[1];
   Z = Z[,trts];
@@ -115,8 +119,16 @@ samp.reduc = function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.s
   
 }
 
+#' colMax
+#'
+#' @param x data.frame or matrix
+#' @export
+colMax <- function(x){
+  apply(x, MARGIN = c(2), max)
+}
+
 ##########################################################
-##### Regional colocalisation (rapid): R #####
+##### Regional colocalisation (rapid) #####
 ##########################################################
 
 #' rapid.reg
@@ -127,14 +139,16 @@ samp.reduc = function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.s
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param unifrom.priors uniform priors
 #' @export
-rapid.reg = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
+rapid.reg <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   m = dim(Zsq)[2];
   Q = dim(Zsq)[1];
   
-  if(uniform.priors == T){
+  if(uniform.priors==T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.1.m = p.1/Q;
@@ -144,7 +158,6 @@ rapid.reg = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   labf = 0.5*(log(Wsq) + (Zsq)*(1- Wsq));
   sum.labf = rowSums(labf);
-
   mx.labf = which.max(labf);
   clc.max = which.max(sum.labf);
   
@@ -154,12 +167,14 @@ rapid.reg = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   sum.labf.subset = colSums(exp(chi - labf));
   rm.trt = which.max(sum.labf.subset);
   
-  reg.prob = sum.exp.chi/(exp(-sum.labf[clc.max])/prior.all  + sum.exp.chi + (prior.sub/prior.all)*sum(sum.labf.subset));
-  return(list(reg.prob, clc.max, rm.trt, exp.chi/sum.exp.chi));
+  reg.prob = sum.exp.chi/(exp(-sum.labf[clc.max] - log(prior.all))  + sum.exp.chi + (prior.sub/prior.all)*sum(sum.labf.subset));
+
+  return(list(reg.prob, clc.max, rm.trt, exp.chi/sum.exp.chi))
+
 }
 
 ##########################################################
-##### Regional colocalisation: R #####
+##### Regional colocalisation #####
 ##########################################################
 
 #' regional.ABF
@@ -186,7 +201,7 @@ rapid.reg = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param Wsq matrix of W squared
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @export
-regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon, reg.thresh, prior.1, prior.2, prior.3, prior.4, flag, test.2, reg.steps, cor.adj.priors, uniform.priors, branch.jump, Zsq, Wsq, ind.traits){
+regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon, reg.thresh, prior.1, prior.2, prior.3, prior.4, flag, test.2, reg.steps, cor.adj.priors, uniform.priors, branch.jump, Zsq, Wsq, ind.traits){
   
   m = dim(Z)[2];
   Q = dim(Z)[1];
@@ -195,7 +210,9 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
   
   if(uniform.priors == T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.1.m = p.1/Q;
@@ -210,14 +227,17 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
   
   if(branch.jump == T & reg.steps > 2){
     jmp = 1;
-  }else{jmp = 0;}
+  }else{
+    jmp = 0;
+  }
   
   ones=matrix(1,nrow=dim(snps.clc)[1],ncol=dim(snps.clc)[1]);
   trait.cor = as.matrix(kronecker(trait.cor, ones));
+  
   log.sum.max.ABF.1 = sum.max.ABF.1 = log.sum.max.ABF.2 = sum.max.ABF.2 = mpfr(0,120);
   log.sum.ABF.1 = sum.ABF.1 = sum.ABF.all.1 = log.sum.ABF.2 = sum.ABF.2 = sum.ABF.all.2 = mpfr(0,120);
   log.all.traits.ABF.1 = log.all.traits.ABF.2 = mpfr(0,120);
-  log.max.ABF.1 = log.max.ABF.2 = mpfr(0,120);
+  log.max.ABF.1 = log.max.ABF.2 = mpfr(0,120)
   mx.ABF.k = mpfr(0,120);
   NAs = 0;
   
@@ -236,9 +256,9 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
         trt.clc = clc.trt[,j] + 0.0;
         if(flag==0){
           if(ind.traits == T){
-            output = regional1ind(Zsq, Wsq, trt.clc);
+            output = regional.ind.1(Zsq, Wsq, trt.clc);
           }else{
-            output = regional1(Z, W, trt.clc, trait.cor, epsilon);
+            output = regional.1(Z, W, trt.clc, trait.cor, epsilon);
           }
           if(i == m){
             max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
@@ -262,7 +282,7 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
             }
           }else{NAs = NAs + 1;}
         }else{
-          output = regional2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
+          output = regional.2(Z, W, snps.clc, trt.clc, rho, trait.cor, epsilon);
           max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
           sum.ABF.1 = max.ABF.1*output[[1]][2];
           clc.max.cvs.1 = output[[1]][3];
@@ -285,7 +305,7 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
               df[2,]$SNPs = toString(clc.max.cvs.2)
             }
           }else{NAs = NAs + 1;}
-        } 
+        }
       }
       if(i==m){
         log.max.ABF.1 = log(max.ABF.1)
@@ -332,7 +352,7 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
   }else{
     prior1 = I.unif*p.1.m + (1-I.unif)*prior(prior.1,prior.2, k = m);
     prior2 = I.unif*p.2.m + (1-I.unif)*prior(prior.1,prior.2, k = m)*prior(prior.3, prior.4, k = m); 
-    output = regional2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
+    output = regional.2(Z, W, snps.clc, c(1:m)+0.0, rho, trait.cor, epsilon);
     max.ABF.1 = prior1*exp(mpfr(output[[1]][1], 120));
     sum.ABF.1 = max.ABF.1*output[[1]][2];
     max.ABF.2 = prior2*exp(mpfr(output[[2]][1], 120));
@@ -341,10 +361,12 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
   }
 
   return(out.list)
+
 } 
 
+
 ##########################################################
-##### Alignment (rapid): R #####
+##### Alignment (rapid) #####
 ##########################################################
 
 #' rapid.align
@@ -355,14 +377,16 @@ regional.ABF = function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon,
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param unifrom.priors uniform priors
 #' @export
-rapid.align = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
+rapid.align <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   m = dim(Zsq)[2];
   Q = dim(Zsq)[1];
   
-  if(uniform.priors == T){
+  if(uniform.priors==T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.1.m = p.1/Q;
@@ -370,37 +394,40 @@ rapid.align = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   if(m==2){
     p.m.1 = 2*p.m.1;
     cnst = 0.25;	
-  }else{ cnst = 1}
+  }else{
+    cnst = 1
+  }
   
   prior.all = I.unif*p.1.m + (1-I.unif)*prior(prior.1, prior.2, k = m);
   prior.align= I.unif*p.m.1 + (1-I.unif)*prior.1*prior(prior.1, prior.2, k = m-1);
   
   labf = 0.5*(log(Wsq) + (Zsq)*(1- Wsq));
   sum.labf = rowSums(labf);
-  
   mx.labf = which.max(labf);
   clc.max = which.max(sum.labf);
   
   chi = sum.labf - sum.labf[clc.max];
   sum.exp.chi = sum(exp(chi));
-  exp.labf.std = exp(labf - labf[mx.labf]);
+  col.max.labf = colMax(labf);
+  exp.labf.std = exp(t(t(labf) - col.max.labf));
   labf.tmp = t(colSums(exp.labf.std) - t(exp.labf.std));
-  
-  sum.tmp = exp(labf[mx.labf])*colSums(exp(chi - labf)*labf.tmp);
+  sum.tmp = colSums(exp(t(t(chi - labf)+col.max.labf))*labf.tmp);
   rm.trt = which.max(sum.tmp);
+
   align.prob = sum.exp.chi/(sum.exp.chi + cnst*(prior.align/prior.all)*sum(sum.tmp));
+
+  return(list(align.prob, rm.trt))
   
-  return(list(align.prob, rm.trt))  
-} 
+}
 
 ##########################################################
-##### Alignment: R #####
+##### Alignment #####
 ##########################################################
 
 #' align.ABF.1
 #'
 #' @param Z matrix of Z-scores
-#' @param W matrix of variances
+#' @param W ratio matrix of prior standard deviation and observed standard errors
 #' @param trait.cor correlation matrix between traits
 #' @param sample.overlap matrix of sample overlap between traits
 #' @param ld.matrix LD matrix
@@ -412,19 +439,21 @@ rapid.align = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param cor.adj.priors correlation adjusted priors
 #' @param uniform.priors uniform priors
 #' @param Zsq matrix of Z-scores squared
-#' @param Wsq matrix of prior variances squared
+#' @param Wsq matrix of W squared
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @export
-align.ABF.1 = function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg.res, align.thresh, prior.1, prior.2, cor.adj.priors, uniform.priors, Zsq, Wsq, ind.traits){
+align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg.res, align.thresh, prior.1, prior.2, cor.adj.priors, uniform.priors, Zsq, Wsq, ind.traits){
   
   m = dim(Z)[2];
   Q = dim(Z)[1];
   traits = c(1:m);
   trait.cor =trait.cor*sample.overlap;
-
+  
   if(uniform.priors == T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.m.1 = p.1/(m*Q*(Q-1));
@@ -434,7 +463,6 @@ align.ABF.1 = function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg
   
   prior.3 = prior.1;
   kappa = 2;
-
   if(cor.adj.priors==T){
     ave.cor = trait.cor[lower.tri(trait.cor)];
     ave.cor = mean(abs(ave.cor));	
@@ -442,25 +470,25 @@ align.ABF.1 = function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg
     prior.3 = prior.1*(10^(-kappa*ave.cor^2));
     p.m.1 = p.m.1*(1-ave.cor)^kappa;
   }
-
+  
   max.ABF.overall = sum.max.ABF.co = mpfr(0,120);
   log.sum.ABF.all.combs = sum.ABF = sum.ABF.co = mpfr(0,120);
-  NaNs = 0;
-  df = data.frame(matrix(vector(), 0,3, dimnames=list(c(), c("log.sum.ABF.all.combs", "Trait.no.clc", "NaNs"))), stringsAsFactors=F)
+  NaNs = 0;  
   
+  df = data.frame(matrix(vector(), 0,3, dimnames=list(c(), c("log.sum.ABF.all.combs", "Trait.no.clc", "NaNs"))), stringsAsFactors=F)
   j = 1;
   align.prob = 1;
   trt.combn = sample(c(1:m));
   prior.algn= I.unif*p.m.1 + (1-I.unif)*prior.3*prior(prior.1, prior.2, k = m-1);
   
   if(m>2){
-    while(align.prob > align.thresh & j <=m){
+    while(j <=m){
       trt.no.clc = trt.combn[j] + 0.0;
       trt.clc = traits[-trt.no.clc] + 0.0;
-      if(ind.traits == TRUE){
-        output = align1ind(Zsq, Wsq, trt.clc, trt.no.clc);
+      if(ind.traits==T){
+        output = align.ind.1(Zsq, Wsq, trt.clc, trt.no.clc);
       }else{
-        output = align1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
+        output = align.1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
       }
       max.ABF = prior.algn*exp(mpfr(output[[1]][1], 120));
       sum.ABF.tmp = max.ABF*output[[2]][1];
@@ -478,32 +506,34 @@ align.ABF.1 = function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg
     trt.no.clc = 1.0;
     trt.clc = traits[-trt.no.clc] + 0.0;
     if(ind.traits == TRUE){
-      output = align1ind(Zsq, Wsq, trt.clc, trt.no.clc);
+      output = align.ind.1(Zsq, Wsq, trt.clc, trt.no.clc);
     }else{
-      output = align1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
+      output = align.1(Z, W, 1, trt.clc, trt.no.clc, trait.cor, ld.matrix, epsilon);
     }
     max.ABF = prior.algn*exp(mpfr(output[[1]][1], 120));
     sum.ABF.tmp = max.ABF*output[[2]][1];
     if(!is.nan(sum.ABF.tmp)){
       sum.ABF= (sum.ABF + sum.ABF.tmp)/2;
-      df[1,]$Trait.no.clc = toString(trt.no.clc);
+      df[1,]$Trait.no.clc = toString(trt.no.clc); 
     }else{NaNs = NaNs + 1}
   }
+  
   log.sum.ABF.all.combs=asNumeric(log(sum.ABF)); 
   df[1,]$log.sum.ABF.all.combs=log.sum.ABF.all.combs;
   df[1,]$NaNs = NaNs;
 
   return(df)
+
 }
 
 ##########################################################
-##### Alignment 1CV and 2CV: R #####
+##### Alignment 1CV and 2CV #####
 ########################################################## 
 
 #' align.ABF.2
 #'
 #' @param Z matrix of Z-scores
-#' @param W matrix of variances
+#' @param W ratio matrix of prior standard deviation and observed standard errors
 #' @param snps.clc SNPs colocalisation 
 #' @param trait.cor correlation matrix between traits
 #' @param sample.overlap matrix of sample overlap between traits
@@ -518,17 +548,19 @@ align.ABF.1 = function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, reg
 #' @param cor.adj.priors correlation adjusted priors
 #' @param unifrom.priors uniform priors
 #' @export
-align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, epsilon, reg.res, align.thresh, prior.1, prior.2, prior.3, prior.4, cor.adj.priors, uniform.priors){
+align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, epsilon, reg.res, align.thresh, prior.1, prior.2, prior.3, prior.4, cor.adj.priors, uniform.priors){
   
   m = dim(Z)[2];
   Q = dim(Z)[1];
   traits = c(1:m);
   n.cv = dim(snps.clc)[1];
   trait.cor =trait.cor*sample.overlap;
-  
+
   if(uniform.priors == T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.m.1 = p.1/(m*Q*(Q-1));
@@ -563,17 +595,17 @@ align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, eps
     p.2.m.2 = p.2.m.2*(1-ave.cor)^4;
     p.co.m.1.2 = p.co.m.1.2*(1-ave.cor)^2 
     p.co.m.2.1 = p.co.m.2.1*(1-ave.cor)^2
-    p.co.m.2.2 = p.co.m.2.2*(1-ave.cor)^2 
+    p.co.m.2.2 = p.co.m.2.2*(1-ave.cor)^2  
   }
   
   ones=matrix(1,nrow=dim(snps.clc)[1], ncol=dim(snps.clc)[1]);
   trait.cor = as.matrix(kronecker(trait.cor, ones));
+  
   max.ABF.overall = sum.max.ABF.co = mpfr(0,120);
   log.sum.ABF.align = sum.ABF = sum.ABF.co = mpfr(0,120);
   NAs = 0;
-
-  df = data.frame(matrix(vector(), 0,7, dimnames=list(c(), c("log.sum.ABF.co.loc", "log.sum.ABF.align", "log.max.SNP.ABF.full", "Trait.no.clc", "Traits.clc", "SNPs.clc", "NaNs"))), stringsAsFactors=F)
   
+  df = data.frame(matrix(vector(), 0,7, dimnames=list(c(), c("log.sum.ABF.co.loc", "log.sum.ABF.align", "log.max.SNP.ABF.full", "Trait.no.clc", "Traits.clc", "SNPs.clc", "NaNs"))), stringsAsFactors=F)
   j = 1;
   align.prob = 1;
   trt.combn = sample(c(1:m));
@@ -587,8 +619,8 @@ align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, eps
   
   while(align.prob > align.thresh & j <=m){
     trt.no.clc = trt.combn[j] + 0.0;
-    trt.clc = traits[-trt.no.clc] + 0.0;  
-    output_1 = align12(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
+    trt.clc = traits[-trt.no.clc] + 0.0;
+    output_1 = align.1.2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
     max.ABF = c(prior.no.11*exp(mpfr(output_1[[1]][1], 120)),prior.no.12*exp(mpfr(output_1[[2]][1], 120)));
     sum.ABF.no = sum(max.ABF*c(output_1[[1]][2], output_1[[2]][2]));
     if(!is.nan(sum.ABF.no)){
@@ -610,7 +642,7 @@ align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, eps
         df[1,]$SNPs.clc = toString(clc.max.cvs.1)
       }
     }else{NAs = NAs + 1;}
-    output_2 = align2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
+    output_2 = align.2(Z, W, snps.clc, trt.clc, trt.no.clc, ld.matrix, trait.cor, epsilon);
     max.ABF = c(prior.no.21*exp(mpfr(output_2[[1]][1], 120)),prior.no.22*exp(mpfr(output_2[[2]][1], 120)));
     sum.ABF.no = sum(max.ABF*c(output_2[[1]][2], output_2[[2]][2]));
     if(!is.nan(sum.ABF.no)){
@@ -642,12 +674,13 @@ align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, eps
   log.sum.ABF.co.loc = asNumeric(log(sum.ABF.co));
   df[1,]$log.sum.ABF.co.loc=log.sum.ABF.co.loc;
   df[1,]$log.max.SNP.ABF.full=asNumeric(log.max.ABF.co);
-
+  
   return(df)
+
 }
 
 ##########################################################
-##### HyPrMTC (rapid): R #####
+##### HyPrColoc (rapid) #####
 ##########################################################
 
 #' rapid.hyprmtc
@@ -658,14 +691,16 @@ align.ABF.2 = function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, eps
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param unifrom.priors uniform priors
 #' @export
-rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
+rapid.hyprmtc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   m = dim(Zsq)[2];
   Q = dim(Zsq)[1];
   
-  if(uniform.priors == T){
+  if(uniform.priors==T){
     I.unif = 1;
-  }else{I.unif = 0;}
+  }else{
+    I.unif = 0;
+  }
   
   p.1 = prior.1;
   p.1.m = p.1/Q;
@@ -673,7 +708,9 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   if(m==2){
     p.m.1 = 2*p.m.1;
     cnst = 0.25;
-  }else{ cnst = 1}
+  }else{
+    cnst = 1
+  }
   
   prior.all = I.unif*p.1.m + (1-I.unif)*prior(prior.1, prior.2, k = m);
   prior.sub = I.unif*p.1.m + (1-I.unif)*prior(prior.1, prior.2, k = m-1);  
@@ -681,7 +718,6 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   labf = 0.5*(log(Wsq) + (Zsq)*(1- Wsq));
   sum.labf = rowSums(labf);
-  
   mx.labf = which.max(labf);
   clc.max = which.max(sum.labf);
   
@@ -691,60 +727,77 @@ rapid.hyprmtc = function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   sum.labf.subset = colSums(exp(chi - labf));
   rm.trt = which.max(sum.labf.subset);
   
-  reg.prob = sum.exp.chi/(exp(-sum.labf[clc.max])/prior.all  + sum.exp.chi + (prior.sub/prior.all)*sum(sum.labf.subset));
-  
-  exp.labf.std = exp(labf - labf[mx.labf]);
+  reg.prob = sum.exp.chi/(exp(-sum.labf[clc.max] - log(prior.all))  + sum.exp.chi + (prior.sub/prior.all)*sum(sum.labf.subset));
+ 
+  col.max.labf = colMax(labf);
+  exp.labf.std = exp(t(t(labf) - col.max.labf));
   labf.tmp = t(colSums(exp.labf.std) - t(exp.labf.std));
-  
-  sum.tmp = exp(labf[mx.labf])*colSums(exp(chi - labf)*labf.tmp);
+  sum.tmp = colSums(exp(t(t(chi - labf)+col.max.labf))*labf.tmp);
+
   align.prob = sum.exp.chi/(sum.exp.chi + cnst*(prior.align/prior.all)*sum(sum.tmp));
   
-  return(list(reg.prob, reg.prob*align.prob, clc.max, exp.chi/sum.exp.chi)) 
+  return(list(reg.prob, reg.prob*align.prob, clc.max, exp.chi/sum.exp.chi))
+
 }
 
 ##########################################################
-##### HyPrMTC #####
+##### HyPrColoc #####
 ##########################################################
 
-#' HyPrMTC
+#' HyPrColoc
 #'
-#' hyprmtc is a function which allows the user to perform multi-trait colocalisation analyses in genomic regions
+#' hyprcoloc is a function which allows the user to perform multi-trait colocalisation analyses in genomic regions
 #' @param effect.est matrix of beta values
 #' @param effect.se matrix of se values
 #' @param binary.outcomes a binary vector depicting binary traits
-#' @param trait.subset vector of traits from the full trait list for targeted coloclaisation analysis
+#' @param trait.subset vector of traits from the full trait list for trageted coloclaisation analysis
 #' @param trait.names vector of trait names corresponding to the columns in the effect.est matrix
 #' @param snp.id vector of SNP IDs
 #' @param ld.matrix LD matrix
 #' @param trait.cor correlation matrix between traits
 #' @param sample.overlap matrix of sample overlap between traits
+#' @param n.cvs number of causal variants
 #' @param bb.alg branch and bound algorithm
 #' @param bb.selection branch and bound algorithm type
 #' @param reg.steps regional step paramter
-#' @param reg.thresh regional probability threshold
+#' @param window.size size of window for 2CV testing
+#' @param sentinel sentinel variant
+#' @param epsilon tolerance parameter
+#' @param reg.thres regional probability threshold
 #' @param align.thresh alignment probability threshold
+#' @param reg.tol regional tolerance parameter
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
+#' @param prior.3 prior probability that a trait contains a second causal variant given it contains one already
+#' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
 #' @param sensitivity perform senstivity analysis
 #' @param sens.1 first sensitivity analysis
 #' @param sens.2 second sensitivity analysis
-#' @param uniform.priors uniform priors
+#' @param cor.adj.priors correlation adjusted priors
+#' @param unifrom.priors uniform priors
+#' @param branch.jump branch jump
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @return results data.frame of results
 #' @return snp.scores list of snp scores for each set of colocalised traits
 #' @import compiler Rmpfr iterpc Matrix
 #' @importFrom Rcpp evalCpp
-#' @useDynLib hyprmtc
+#' @useDynLib hyprcoloc
 #' @author Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
 #' @examples
-#' # Regression coefficients and standard errors from three GWAS studies
-#' beta <- matrix(rnorm(3000), nrow=1000, ncol=3)
-#' se <- matrix(abs(rnorm(3000)), nrow=1000, ncol=3)
-#'
+#' # Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)
+#' betas <- hyprcoloc::test.betas
+#' head(betas)
+#' ses <- hyprcoloc::test.ses
+#' head(ses)
+#'   
+#' # Trait names and SNP IDs
+#' traits <- paste0("T", 1:10)
+#' rsid <- rownames(betas)
+#' 
 #' # Colocalisation analyses
-#' results <- hyprmtc(beta,se)
+#' results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
 #' @export
-hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]), trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = FALSE){
+hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]),  n.cvs = 1, bb.alg = TRUE, bb.selection = "regional", test.2 = FALSE, reg.steps = 1, window.size = dim(effect.est)[1], sentinel = 0, epsilon = 0, reg.thresh = "default", align.thresh = "default", reg.tol = 0.699, prior.1 = 1e-4, prior.2 = 0.98, prior.3 = 1e-3, prior.4 = 0.995, sensitivity = F, sense.1 = 1, sense.2 = 2, cor.adj.priors = FALSE, uniform.priors = TRUE, branch.jump = FALSE, ind.traits = FALSE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -761,17 +814,6 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   m = dim(Z)[2];
   Q = dim(Z)[1];
   
-  n.cvs = 1
-  test.2 = FALSE
-  sentinel = 0
-  epsilon = 0
-  window.size = dim(effect.est)[1]
-  prior.3 = 1e-3
-  prior.4 = 0.995
-  reg.tol = 0.699
-  cor.adj.priors = FALSE
-  branch.jump = FALSE
-  
   if(uniform.priors==F & (reg.thresh == "default" | align.thresh == "default")){
     if(reg.thresh == "default"){reg.thresh = 0.5; reg.tol = 0.499;}
     if(align.thresh == "default"){align.thresh = 0.5;}
@@ -783,20 +825,19 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   if(reg.tol >= reg.thresh){         
     reg.tol = reg.thresh-0.001;
   } 
- 
-  if(bb.alg == T & uniform.priors==F & (reg.thresh < 0.5 | align.thresh < 0.5)){stop("do not run branch and bound algorithm with reg.thresh or align.thresh < 0.5 when using non-uniform priors")};
-  if(bb.alg == T & uniform.priors==T & (reg.thresh < 0.6 | align.thresh < 0.6)){stop("do not run branch and bound algorithm with reg.thresh or align.thresh < 0.6 when using uniform priors")};
-  if(! n.cvs %in% c(1,2)){stop("current version of HyPrMTMC is limited to assessment of a maximum of 2 CVs in a region: set n.cvs to either 1 or 2")}; 
-  if(n.cvs == 2 & window.size >= 4E2){print("computation likely to take a long time. Consider utilising the window.size and sentinel variables to focus assessment within a specified window of a sentinel SNP, default is the lead SNP across all traits")};
-  if(sensitivity == T){bb.alg = F; print("performing a regional probability sensitivity assessment: posterior probability of co-localisation will not be computed")};
-  if(!(reg.steps %in% 0:m)){stop("reg.steps parameter must be an integer between 0 and number of traits m")};
-  if(!(sense.1 %in% 0:m) | !(sense.2 %in% 0:m)){stop("sensitivity parameters must be intergers between 0 and number of traits m")};
-  if(sense.1 >= sense.2){stop("sensitivity parameter sense.2 must be greater than sensitivity parameter sense.1")};
-  if(window.size > Q){stop("window size cannot be larger than the number of SNPs Q in the region")}
-  if((length(trait.subset)<m & typeof(trait.subset)!="integer") & length(trait.names) < m){stop("when using character names in 'trait.subset' the variable 'trait.names' must be of length m, containing names for all traits considered")}
-  if(bb.selection == "reg.only" & reg.thresh < 0.9){warning("posterior evaluation and the BB algorithm are based on values of the regional statistic only.\n Consider setting a larger value for the regional threshold, e.g. > 0.9, to avoid difficulties in interpreting any regional association signals.");}
-  if(all(ld.matrix[lower.tri(ld.matrix)] == 0) & !all(trait.cor[lower.tri(trait.cor)] == 0)) warning("ld.matrix is an identity matrix but trait.cor is not an identity matrix")
-    
+
+  if(bb.alg == T & uniform.priors==F & (reg.thresh < 0.5 | align.thresh < 0.5)){stop("Do not run branch and bound algorithm with reg.thresh or align.thresh < 0.5 when using non-uniform priors")};
+  if(bb.alg == T & uniform.priors==T & (reg.thresh < 0.6 | align.thresh < 0.6)){stop("Do not run branch and bound algorithm with reg.thresh or align.thresh < 0.6 when using uniform priors")};
+  if(! n.cvs %in% c(1,2)){stop("Current version of HyPrMTMC is limited to assessment of a maximum of 2 CVs in a region: set n.cvs to either 1 or 2")}; 
+  if(n.cvs == 2 & window.size >= 4E2){print("Computation likely to take a long time. Consider utilising the window.size and sentinel variables to focus assessment within a specified window of a sentinel SNP, default is the lead SNP across all traits")};
+  if(sensitivity == T){bb.alg = F; print("Performing a regional probability sensitivity assessment: posterior probability of co-localisation will not be computed")};
+  if(! reg.steps %in% 0:m){stop("reg.steps parameter must be an integer between 0 and number of traits m")};
+  if(! sense.1 %in% 0:m | ! sense.2 %in% 0:m ){stop("Sensitivity parameters must be intergers between 0 and number of traits m")};
+  if(sense.1 >= sense.2){stop("Sensitivity parameter sense.2 must be greater than sensitivity parameter sense.1")};
+  if(window.size > Q){stop("Window size cannot be larger than the number of SNPs Q in the region")}
+  if((length(trait.subset)<m & typeof(trait.subset)!="integer") & length(trait.names) < m){stop("When using character names in 'trait.subset' the variable 'trait.names' must be of length m, containing names for all traits considered")}
+  if(bb.selection == "reg.only" & reg.thresh < 0.9){warning("Posterior evaluation and the BB algorithm are based on values of the regional statistic only.\n Consider setting a larger value for the regional threshold, e.g. > 0.9, to avoid difficulties in interpreting any regional association signals.");} 
+
   if(class(trait.subset)=="character" & class(trait.names)=="character"){
     tmp.traits = c(1:m);
     traits = tmp.traits[tolower(trait.names) %in% tolower(trait.subset)];
@@ -807,8 +848,8 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   }else{stop("trait.subset must be character or intger valued")}
   
   if(n.cvs==1 & test.2==F){
-  W = 0.15/effect.se;
-  W[, which(binary.outcomes==1)] = 0.2/(effect.se[, which(binary.outcomes==1)]);
+    W = 0.15/effect.se;
+    W[, which(binary.outcomes==1)] = 0.2/(effect.se[, which(binary.outcomes==1)]);
   }else if(n.cvs==1 & test.2==T){
     W = 0.15/effect.se;
     W[, which(binary.outcomes==1)] = 0.2/(effect.se[, which(binary.outcomes==1)]);
@@ -824,7 +865,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
     ind.traits = TRUE;
     Zsq = Z^2;
     Wsq = 1/(1+ W^2);
-    if(reg.steps == 1 & test.2 == FALSE){rapid = TRUE}else{rapid = FALSE};
+    if(reg.steps == 1 & test.2 == FALSE){rapid = TRUE};
   }else{
     Zsq = Wsq = sparseMatrix(i=1, j=1, dims=c(Q,m));
     rapid = FALSE;
@@ -855,7 +896,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   
   cor.trts = identical(trait.cor, diag(m));
   if(branch.jump == T & cor.trts == F){branch.jump = F};
-
+  
   snp.scores = list();
   bb.selection = tolower(bb.selection);
 
@@ -865,7 +906,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
       snps.clc = as.matrix(t(snp.combin(Q, 2, snps)));
       flag = 0;        
     }
-    if(bb.alg==T){
+    if(bb.alg==T){    
       df = data.frame(matrix(vector(), 0,9, dimnames=list(c(), c("Algorithm_iteration", "Putatively_co_localised_traits", "HyPr_MTC_posterior", "Regional_probability", "Putatively_causal_SNP",  "Posterior_explained_by_SNP", "Posterior_ratio_2CVs_vs_1_or_2CVs", "Dropped_trait", "NaNs"))), stringsAsFactors=F)
       i=m;
       count = 1;
@@ -884,7 +925,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
             }else{
               reg.res = rapid.reg(tmp.vars[[7]], tmp.vars[[8]], prior.1, prior.2, uniform.priors)
               reg.prob = reg.res[[1]];
-            }
+            }  
           }else{
             while(reg.prob <= reg.thresh){
               tmp.vars = samp.reduc(Z, W, ld.matrix, trait.cor, sample.overlap, trts, Zsq = Zsq, Wsq = Wsq);
@@ -925,7 +966,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
               align.res = rapid.align(tmp.vars[[7]], tmp.vars[[8]], prior.1, prior.2, uniform.priors);
               align.prob = align.res[[1]];
               if(align.prob <= align.thresh | reg.prob <=  reg.thresh){trts = trts[-align.res[[2]]];}
-            } 
+            }
           }else{
             reg.only = 1; break;
           }
@@ -945,19 +986,19 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
             if(bb.selection != "reg.only" & ind.traits == F){
               df[count,]$NaNs = reg.res$NaNs + align.res$NaNs;
             }else{df[count,]$NaNs = reg.res$NaNs;}   
-              df[count,]$Putatively_causal_SNP = toString(snp.id[as.numeric(reg.res$SNPs)]);
-              df[count,]$Posterior_explained_by_SNP = exp(reg.res$log.max.SNP.ABF.full-reg.res$log.sum.ABF.full);          
-              snp.scores[[count]] = reg.result[[2]];
-            }else{
-              df[count,]$Putatively_causal_SNP = toString(snp.id[reg.res[[2]]]);
-              df[count,]$Posterior_explained_by_SNP = reg.res[[4]][reg.res[[2]]];
-              snp.scores[[count]] = reg.res[[4]];
-            }
+            df[count,]$Putatively_causal_SNP = toString(snp.id[as.numeric(reg.res$SNPs)]);
+            df[count,]$Posterior_explained_by_SNP = exp(reg.res$log.max.SNP.ABF.full-reg.res$log.sum.ABF.full);          
+            snp.scores[[count]] = reg.result[[2]];
           }else{
-            df[count,]$Algorithm_iteration = count;
-            df[count,]$Putatively_co_localised_traits = "None";   
-            df[count,]$Dropped_trait = toString(trait.names[trts]);
-            if(reg.only == 1 & rapid == F){df[count,]$NaNs = reg.res$NaNs;
+            df[count,]$Putatively_causal_SNP = toString(snp.id[reg.res[[2]]]);
+            df[count,]$Posterior_explained_by_SNP = reg.res[[4]][reg.res[[2]]];
+            snp.scores[[count]] = reg.res[[4]];
+          }
+        }else{
+          df[count,]$Algorithm_iteration = count;
+          df[count,]$Putatively_co_localised_traits = "None";   
+          df[count,]$Dropped_trait = toString(trait.names[trts]);
+          if(reg.only == 1 & rapid == F){df[count,]$NaNs = reg.res$NaNs;
           }else if(rapid == F){df[count,]$NaNs = reg.res$NaNs + align.res$NaNs;}
         }
         traits = traits[! traits %in% trts];
@@ -1006,8 +1047,8 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
           df[1,]$HyPr_MTC_posterior = rapid.result[[2]];   
           df[1,]$Putatively_causal_SNP = toString(snp.id[rapid.result[[3]]]);
           df[1,]$Posterior_explained_by_SNP = rapid.result[[4]][rapid.result[[3]]];
-          snp.scores = rapid.result[[4]];   
-        } 
+          snp.scores = rapid.result[[4]];
+        }
       }else{
         df = data.frame(matrix(vector(), 0,4, dimnames=list(c(), c("Traits", "Regional_Pr_1", "Regional_Pr_2", "Relative_diff"))), stringsAsFactors=F)
         df[1,]$Traits = toString(trait.names);          
@@ -1032,11 +1073,11 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
     test.2 = 0;
     snps = c(1:Q);
     snps.clc = as.matrix(t(snp.combin(Q, 2, snps)));
-    if(bb.alg == TRUE){
+    if(bb.alg==T){
       NaNs = 0;
       i=m;
       count = 1;
-      reg.prob = align.prob = 0;
+      reg.prob = align.prob = 0;  
       df = data.frame(matrix(vector(), 0,8, dimnames=list(c(), c("Algorithm_iteration", "Putatively_co_localised_traits", "HyPr_MTC_posterior", "Regional_probability", "Putatively_causal_SNPs", "Posterior_explained_by_SNPs", "Dropped_trait", "NaNs"))), stringsAsFactors=F)
       while(i>1){
         trts=traits;
@@ -1099,7 +1140,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
           df[count,]$HyPr_MTC_posterior = hypr_post;   
           df[count,]$Putatively_causal_SNPs = toString(snp.id[as.numeric(unlist(strsplit(clc.snp, split=", ")))]);
           df[count,]$Posterior_explained_by_SNPs = asNumeric(reg.max.snp/reg.max.full);          
-          df[count,]$NaNs = NaNs;
+          df[count,]$NaNs = NaNs; 
           snp.scores[[count]] = reg.result[[tmp.mx+1]];
         }else{
           df[count,]$Algorithm_iteration = count;          
@@ -1132,7 +1173,7 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
           tmp.mx = which(reg.res$log.sum.ABF.full==max(reg.res$log.sum.ABF.full));
           clc.snp = reg.res$SNPs[tmp.mx];
           reg.max.snp = reg.res$log.max.SNP.ABF.full[tmp.mx];
-          reg.max.full = reg.res$log.sum.ABF.full[tmp.mx];
+          reg.max.full = reg.res$log.sum.ABF.full[tmp.mx]; 
           align.res = align.ABF.2(tmp.vars[[1]], tmp.vars[[2]], snps.clc, tmp.vars[[4]], tmp.vars[[5]], tmp.vars[[3]], epsilon, reg.full, align.thresh, prior.1, prior.2, prior.3, prior.4, cor.adj.priors, uniform.priors);
           align.tot = exp(mpfr(align.res$log.sum.ABF.align,120));
           reg.full.align = sum(exp(mpfr(align.res$log.sum.ABF.co.loc,120)));
@@ -1174,11 +1215,12 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
         reg.all = sum(exp(mpfr(reg.res$log.sum.ABF.all.combs,120)));
         reg.prob.2 = asNumeric(reg.full/(1 + reg.all));
         df[1,]$Regional_Pr_2 = reg.prob.2;
-        df[1,]$Relative_diff = abs(reg.prob.1-reg.prob.2)/reg.prob.2; 
+        df[1,]$Relative_diff = abs(reg.prob.1-reg.prob.2)/reg.prob.2;
       }
-    } 
+    }
   }
-  if(length(which(df$NaNs!=0)) > 1){print("Either the Z score correlation matrix or adjusted prior matrix has a high condition number: consider increasing epsilon by a small amount");}
+  
+  if(length(which(df$NaNs!=0)) > 1){print("Results include NAs. Possible the Z score correlation matrix or adjusted prior matrix has a high condition number somewhere: consider increasing epsilon by a small amount");}
   names(df)[names(df)=="Algorithm_iteration"] <- "iteration"
   names(df)[names(df)=="Putatively_co_localised_traits"] <- "traits"
   names(df)[names(df)=="Traits"] <- "traits"
@@ -1200,20 +1242,21 @@ hyprmtc = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.es
   if(any(!is.na(df$regional_prob))){df$regional_prob[!is.na(df$regional_prob)] <- round(as.numeric(df$regional_prob[!is.na(df$regional_prob)]),4); df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)] <- round(as.numeric(df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)]),4)}
   if(length(df$posterior_ratio_2cvs_vs_1_or_2cvs)>0){if(any(!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs))){df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)] <- round(as.numeric(df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)]),4)}}
   if(sum(is.na(snp.scores))==0 & length(snp.scores)>0){results = list(results=df, scores=snp.scores)}else{results = list(results=df)};
-  class(results) <- "hyprmtc"; 
-  return(results);
+  class(results) <- "hyprcoloc"; 
+
+  return(results)
+
 }
 
-#' Print HyPrMTC
+#' Print HyPrColoc
 #'
-#' print method for class "hyprmtc"
-#' @param x an object of class "hyprmtc"
-#' @author Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <js16174@bristol.ac.uk>
+#' print method for class "hyprcoloc"
+#' @param x an object of class "hyprcoloc"
+#' @author Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
 #' @export
-print.hyprmtc <- function(x, ...){
-  cat("\nCall: \nhyprmtc")
+print.hyprcoloc <- function(x, ...){
+  cat("\nCall: \nhyprcoloc")
   cat("\n\nResults:\n")
   print(x$results)
   cat("\n")
 }
-
