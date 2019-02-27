@@ -14,7 +14,7 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
   reg.steps = 1, reg.thresh = "default",
   align.thresh = "default", prior.1 = 1e-04,
   prior.2 = 0.98, sensitivity = F, sense.1 = 1, sense.2 = 2,
-  uniform.priors = TRUE, ind.traits = TRUE)
+  uniform.priors = FALSE, ind.traits = TRUE)
 }
 \arguments{
 \item{effect.est}{matrix of estimated regression coefficients where columns denote traits and rows variants.}
