@@ -796,8 +796,7 @@ rapid.hyprmtc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' 
 #' # Colocalisation analyses
 #' results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
-#' @export
-hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]),  n.cvs = 1, bb.alg = TRUE, bb.selection = "regional", test.2 = FALSE, reg.steps = 1, window.size = dim(effect.est)[1], sentinel = 0, epsilon = 0, reg.thresh = "default", align.thresh = "default", reg.tol = 0.699, prior.1 = 1e-4, prior.2 = 0.98, prior.3 = 1e-3, prior.4 = 0.995, sensitivity = F, sense.1 = 1, sense.2 = 2, cor.adj.priors = FALSE, uniform.priors = FALSE, branch.jump = FALSE, ind.traits = FALSE){
+hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = TRUE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -809,6 +808,17 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
   if(any(is.na(ld.matrix))) stop("there are missing values in ld.matrix")
   if(any(is.na(trait.cor))) stop("there are missing values in trait.cor")
   if(any(is.na(sample.overlap))) stop("there are missing values in sample.overlap")
+
+  n.cvs = 1;
+  test.2 = F;
+  sentinel = 0;
+  epsilon = 0;
+  window.size = dim(effect.est)[1];
+  prior.3 = 1e-3;
+  prior.4 = 0.995;
+  reg.tol = 0.699;
+  cor.adj.priors = F;
+  branch.jump = F;
 
   Z = effect.est/effect.se;    
   m = dim(Z)[2];
