@@ -68,7 +68,7 @@ results a data.frame of HyPrColoc results
 snpscores a vector of the estimated posterior probabilities explained by the SNPs
 }
 \description{
-hyprcoloc is a Bayesian methodology which allows users to perform multi-trait colocalisation analyses across vast numbers of traits in a genomic region. The software outputs sets of traits deemed to colocalize at distinct distinct 'causal' variants, returning a posterior probability of colocalization and pinpointing a putative causal variant for each set. To assess the quality of the multi-trait fine-mapping the proportion of posterior probability explained by the candidate causal variant for each collection is presented.  
+HyPrColoc is a Bayesian methodology which allows users to perform multi-trait colocalisation analyses across vast numbers of traits in a genomic region. The software outputs sets of traits deemed to colocalize at distinct distinct 'causal' variants, returning a posterior probability of colocalization and pinpointing a putative causal variant for each set. To assess the quality of the multi-trait fine-mapping the proportion of posterior probability explained by the candidate causal variant for each collection is presented.  
 }
 \examples{
 # Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)
