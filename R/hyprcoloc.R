@@ -683,7 +683,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
 ##### HyPrColoc (rapid) #####
 ##########################################################
 
-#' rapid.hyprmtc
+#' rapid.hyprcoloc
 #'
 #' @param Zsq matrix of Z-scores
 #' @param Wsq ratio matrix of prior standard deviation and observed standard errors squared
@@ -691,7 +691,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param unifrom.priors uniform priors
 #' @export
-rapid.hyprmtc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
+rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
   m = dim(Zsq)[2];
   Q = dim(Zsq)[1];
@@ -777,8 +777,9 @@ rapid.hyprmtc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param unifrom.priors uniform priors
 #' @param branch.jump branch jump
 #' @param ind.traits are the traits independent or to be treated as independent
-#' @return results data.frame of results
-#' @return snp.scores list of snp scores for each set of colocalised traits
+#' @param snpscores output estimated posterior probability explained each SNP
+#' @return results a data.frame of HyPrColoc results
+#' @return snpscores a vector of the estimated posterior probabilities explained by the SNPs
 #' @import compiler Rmpfr iterpc Matrix
 #' @importFrom Rcpp evalCpp
 #' @useDynLib hyprcoloc
@@ -796,7 +797,7 @@ rapid.hyprmtc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' 
 #' # Colocalisation analyses
 #' results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
-hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = FALSE){
+hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = FALSE, snpscores=FALSE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -1052,7 +1053,7 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
             }
           }
         }else{
-          rapid.result = rapid.hyprmtc(tmp.vars[[7]], tmp.vars[[8]], prior.1, prior.2, uniform.priors);
+          rapid.result = rapid.hyprcoloc(tmp.vars[[7]], tmp.vars[[8]], prior.1, prior.2, uniform.priors);
           df[1,]$Regional_probability = rapid.result[[1]];   
           df[1,]$HyPr_MTC_posterior = rapid.result[[2]];   
           df[1,]$Putatively_causal_SNP = toString(snp.id[rapid.result[[3]]]);
@@ -1251,7 +1252,7 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
   if(any(!is.na(df$posterior_prob))){df$posterior_prob[!is.na(df$posterior_prob)] <- round(as.numeric(df$posterior_prob[!is.na(df$posterior_prob)]),4); df$regional_prob[!is.na(df$regional_prob)] <- round(as.numeric(df$regional_prob[!is.na(df$regional_prob)]),4); df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)] <- round(as.numeric(df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)]),4)}
   if(any(!is.na(df$regional_prob))){df$regional_prob[!is.na(df$regional_prob)] <- round(as.numeric(df$regional_prob[!is.na(df$regional_prob)]),4); df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)] <- round(as.numeric(df$posterior_explained_by_snp[!is.na(df$posterior_explained_by_snp)]),4)}
   if(length(df$posterior_ratio_2cvs_vs_1_or_2cvs)>0){if(any(!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs))){df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)] <- round(as.numeric(df$posterior_ratio_2cvs_vs_1_or_2cvs[!is.na(df$posterior_ratio_2cvs_vs_1_or_2cvs)]),4)}}
-  if(sum(is.na(snp.scores))==0 & length(snp.scores)>0){results = list(results=df, scores=snp.scores)}else{results = list(results=df)};
+  if(sum(is.na(snp.scores))==0 & length(snp.scores)>0 & snpscores==T){results = list(results=df, snpscores=snp.scores)}else{results = list(results=df)};
   class(results) <- "hyprcoloc"; 
 
   return(results)
