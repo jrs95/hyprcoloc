@@ -65,7 +65,7 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
 \value{
 results a data.frame of HyPrColoc results
 
-snpscores a vector of the estimated posterior probabilities explained by the SNPs
+snpscores a list of estimated posterior probabilities explained by the SNPs; for the BB algorithm there is a set of SNP probabilities for each iteration
 }
 \description{
 HyPrColoc is a Bayesian methodology which allows users to perform multi-trait colocalisation analyses across vast numbers of traits in a genomic region. The software outputs sets of traits deemed to colocalize at distinct distinct 'causal' variants, returning a posterior probability of colocalization and pinpointing a putative causal variant for each set. To assess the quality of the multi-trait fine-mapping the proportion of posterior probability explained by the candidate causal variant for each collection is presented.  
