@@ -2,7 +2,7 @@
 Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) analyses.
 
 ## Functions
-* hyprcoloc - performs multi-trait colocalization across numerous traits.  
+* hyprcoloc - performs multi-trait colocalization across multiple traits.  
 
 ## Installation
 1. install.packages("devtools")
