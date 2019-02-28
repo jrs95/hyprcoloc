@@ -779,7 +779,7 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @param snpscores output estimated posterior probability explained each SNP
 #' @return results a data.frame of HyPrColoc results
-#' @return snpscores a vector of the estimated posterior probabilities explained by the SNPs
+#' @return snpscores a list of estimated posterior probabilities explained by the SNPs; for the BB algorithm there is a set of SNP probabilities for each iteration
 #' @import compiler Rmpfr iterpc Matrix
 #' @importFrom Rcpp evalCpp
 #' @useDynLib hyprcoloc
