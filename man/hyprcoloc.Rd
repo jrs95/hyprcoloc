@@ -58,12 +58,14 @@ hyprcoloc(effect.est, effect.se, binary.outcomes = rep(0, dim(Z)[2]),
 \item{uniform.priors}{uniform priors. Default is to use variant specific prior configuration proababilities setting uniform.prior=FALSE.}
   
 \item{ind.traits}{are the traits independent or to be treated as independent. Default ind.traits=FALSE}
+                       
+\item{snpscores}{output the estimated posterior probability explained by each SNP. Default snpscores=FALSE}
 
 }
 \value{
-results data.frame of results
+results a data.frame of HyPrColoc results
 
-snp.scores list of snp scores for each set of colocalised traits
+snpscores a vector of the estimated posterior probabilities explained by the SNPs
 }
 \description{
 hyprcoloc is a Bayesian methodology which allows users to perform multi-trait colocalisation analyses across vast numbers of traits in a genomic region. The software outputs sets of traits deemed to colocalize at distinct distinct 'causal' variants, returning a posterior probability of colocalization and pinpointing a putative causal variant for each set. To assess the quality of the multi-trait fine-mapping the proportion of posterior probability explained by the candidate causal variant for each collection is presented.  
