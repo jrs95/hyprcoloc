@@ -26,7 +26,5 @@ rsid <- rownames(betas)
 hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)  
 
 ## Citation
-* HyPrColoc: 
-* LD blocks:
-
-
+* HyPrColoc: TBC 
+* LD blocks: Berisa T & Pickrell JK. Approximately independent linkage disequilibrium blocks in human populations. Bioinformatics 2016; 32(2):283-285
