@@ -1,7 +1,7 @@
 ---
 title: "HyPrColoc"
 author: "Christopher Foley & James Staley"
-date: "28/02/2019"
+date: "9/05/2019"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{hyprcoloc}
@@ -11,9 +11,9 @@ vignette: >
 
 ## Introduction
 
-HyPrColoc is Bayesian pattern recognition algorithm for identifying sets of traits which colocalize at distinct causal variants in a geneomic region. The default algorithm can identify clusters of putatively colocalized traits, within a vast collection of traits, e.g. 1000s, in seconds. For each set of putatively colocalized traits, the algorithm outputs: the names of the traits, the posterior probability of colocalization, the location of the shared putatatively causal variant and a fine-mapping probability to quantify the probability that the cadidate causal variant is causal. 
+HyPrColoc is Bayesian divisive clustering algorithm for identifying sets of traits which colocalize at distinct causal variants in a genomic region. The default algorithm can identify clusters of putatively colocalized traits, within a vast collection of traits, e.g. 1000s, quickly. For each set of putatively colocalized traits, the algorithm outputs: the names of the traits, the posterior probability of colocalization, the location of the shared putatively causal variant and a ‘fine-mapping’ probability to quantify evidence supporting the candidate causal variant being the causal variant. 
 
-Traits can be either continuous, e.g. blood pressure, or discrete, e.g. a disease. Basic analyses require information on the summarized effect estimates (i.e. estimated regression coefficients) and their corresponding standard errors, for each snp in the genomic region and each trait under consideration. These should be entered as numeric matrices. If the traits are measured in non-independent studies (i.e. those containing overlapping participants) analyses can be adjusted to account for this. To do this three matrices are required: (i) the pair-wise marginal correlations between the traits; (ii) the pair-wise LD estimates between the snps in the region and; (iii) the pair-wise estimates of the proportion of sample overlap between study participants. We strongly recommend reading our note (below and in more detail our paper) on these types of analyses before performing them. 
+Traits can be either continuous, e.g. blood pressure, or discrete, e.g. a disease. Basic analyses require information on the summarized effect estimates (i.e. estimated regression coefficients) and their corresponding standard errors, for each snp in the genomic region and each trait under consideration. These should be entered as numeric matrices. If the traits are measured in non-independent studies (i.e. those containing overlapping participants) analyses can be adjusted to account for this. To do this three matrices are required: (i) the pair-wise marginal correlations between the traits; (ii) the pair-wise LD estimates between the snps in the region and; (iii) the pair-wise estimates of the proportion of sample overlap between study participants. We recommend reading our note (below and in more detail our paper) on adjusting analyses to account for correlated summary data and a-priori trait correlation, before doing so in your analyses. 
 
 ### Installation
 
@@ -29,7 +29,7 @@ install_github("jrs95/hyprcoloc")
 
 ## Getting started
 
-We start by loading the package and some data needed to run analyses using HyPrColoc in the first part of this excercise. To execute a basic analysis, users need only input two matrices of equal size: (i) a matrix of effect estimates (betas), with the columns denoting the study traits and rows the snps, and; (ii) a matrix of corresponding standard errors (ses). 
+In the first part of this exercise we begin by loading the package and some data needed to run analyses using HyPrColoc. For a given region, a standard analysis requires data from two matrices, of equal size, denoting: (i) a matrix of effect estimates (betas), with the columns denoting the study traits and rows the snps, and; (ii) a matrix of corresponding standard errors (ses).
 
 ```{r}
 library(hyprcoloc)
@@ -42,7 +42,7 @@ head(ses)
 
 ### Basic set-up: assuming independce between studies 
 
-By default HyPrColoc assumes that between study estimates of regression coefficients (betas) are independent and automatically uses the branch and bound selection algorithm to identify sets of colocalized traits. Studies/traits will be assigned a name corresponding to their column position and similarly snp names assigned according to row position. Alternatively users can input study/trait and snp names, e.g.     
+By default HyPrColoc assumes that each trait is measured in a distinct study, i.e. that the participants do not overlap between studies, so that between study estimates of regression coefficients (betas) are independent. The function will automatically employ the Bayesian divisive clustering algorithm to identify clusters of colocalized traits. Each study (/trait) will be assigned a name corresponding to their column position and similarly the snps will be assigned names according to row position. To input trait and snp labels we make use of the "trait.names" and "snp.id" variables, e.g.      
 
 ```{r}
 traits <- paste0("T", 1:dim(betas)[2])
@@ -51,28 +51,28 @@ res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
 res
 ```
 
-For each iteration of the algorithm, HyPrColoc outputs:
+From the above output we see that HyPrColoc returns:
 
 (i) a set of traits putatively colocalized traits
 (ii) the posterior probability of colocalization of these traits
-(iii) the regional association probability (which is always > the posterior probability)
+(iii) the 'regional association' probability (which is always > the posterior probability and is deduced from an assessment similar to a PHeWAS assessment)
 (iv) a candidate causal variant explaining the shared association 
 (v) the proportion of the posterior probability explained by this variant (which represents the HyPrColoc multi-trait fine-mapping probability). 
 
-In this example, HyPrColoc identified traits 1-5 as being colocalized with posterion probability $1$, regional association probability $1$, candidate snp rs11591147 which explains 100\% of the posterior 
+Moreover, HyPrColoc returns this information for each iteration of the algorithm, in this case it took three iterations to identify that traits 1-5 form a cluster of colocalized traits, traits 6-8 for a separate cluster of colocalized traits and finally that traits 9 and 10 also colocalize. We see that the cluster of traits 1-5 have a posterior probability $1$ of being colocaized, hence the regional association probability is also $1$ and that the candidate snp rs11591147 explains 100\% of the posterior. Thus, there is very strong support that traits 1-5 colocalize and that rs11591147 be taken as the candidate causal snp in the region. While traits 9 and 10 have strong evidence of colocalizing, having a posterior probability of $0.9$, there is weak evidence to support rs7524677 as the causal snp in the region. This example helps to illustrate that: while a cluster of traits can show strong evidence of colocalization the snp most likely to explain colocalization can be ambiguous.
 
-#### Focusing on a subset of traits
+#### Choosing a subset of trait to analyse
 
-We can choose to analyse a subset of the traits, for example the first two traits, by typing 
+We can choose to assess for evidence of colocalization across a subset of the traits in the full sample. For example, let's suppose interest lies in assessing the first two traits only, in this situation we make use of the "trait.subset" variable, e.g.
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.subset = c("T1","T2"));
 res
 ```
 
-#### Identifying continuous and binary traits in the sample
+#### Labelling a trait as either continuous or binary in analyses
 
-For technical reasons, analyses have a modest dependence on whether a trait is continuous or binary in the sample. To let HyPrColoc know which traits are continuous (coded 0) or binary (coded 1) we use the 'binary.outcome' variable. For example, suppose the first three traits are binary, then we type 
+For technical reasons, analyses have a dependence on whether a trait is continuous or binary. To let HyPrColoc know which traits are continuous (coded 0) or binary (coded 1) we use the 'binary.outcome' variable. For example, suppose the first three traits are binary, then we type 
 
 ```{r}
 binary.traits = c(1,1,1,rep(0,dim(betas)[2]-3));
@@ -80,20 +80,21 @@ res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, binary.outcomes = 
 res
 ```
 
-### Branch and bound algorithm
+### Bayesian divisive clustering algorithm
 
-The branch and bound selection algorithm identifies sets of colocalized traits. When all traits are identified as not sharing a causal variant, the algorithm aims to identify the subset of traits with the greatest evidence of colocalization. In summary, we construct two approaches to do this: the regional or alignment selection criterium. The regional selection criterium is computed from a collection of hypotheses which assume that all traits do not colocalize because one of the traits does not have a causal variant in the region. The alignment selection criterium, however, is computed from hypotheses which assume that all traits do not colocalize because one of the traits has a causal variant elsewhere in the region. This process searches a much larger amount of the causal configuration space and is more computationally expensive, but potentially more robust, than regional selection. Typically, both strategies perform similarly and we therefore set regional selection as the default. 
+The Bayesian divisive clustering algorithm identifies clusters of colocalized traits in the sample. The algorithm is automatically used When all traits are identified as not sharing a causal variant. For each iteration of the algorithm, the goal is to identify a subset of traits with the greatest evidence of colocalization. HyPrColoc does this using one of two (user defined) approaches: (i) the regional or (ii) alignment selection criterion. The regional selection criterion is computed from a collection of hypotheses which assume that all traits do not colocalize because one of the traits does not have a causal variant in the region. The alignment selection criterion, however, is computed from hypotheses which assume that all traits do not colocalize because one of the traits has a causal variant elsewhere in the region. The alignment selection process searches a much larger amount of the causal configuration space and is thus more computationally expensive (but potentially more robust) than regional selection. Typically, both strategies perform similarly and we therefore chose the regional selection as the default setting. 
 
-#### Assessing differences between the branch and bound selection criteria
 
-The regional selection criterium:   
+#### Assessing differences between the Bayesian divisive clustering criteria
+
+The regional selection criterion:   
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional");
 res
 ```
 
-The alignment selection criterium:   
+The alignment selection criterion:   
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "align");
@@ -101,7 +102,7 @@ res
 ```
 
 
-#### Assessing influence of prior choice and theshold parameters on performance
+#### Assessing the influence of prior choice and the regional and alignment theshold parameters
 
 An important feature of the HyPrColoc software is that it allows for some sensitivity to the choice of causal configuration priors to be assessed. Two prior choices are presented: (i) conditionally uniform priors, which assumes that all causal configurations relating to a given hypotheses are equally likely, and; (ii) variant specific prioris, which, for each variant, focuses on tuning the probability that a variant is colocalized with a subset of traits, for all possible subsets.    
 
@@ -134,7 +135,7 @@ res
 
 #### Switching the algorithm off
 
-We can choose to switch the branch and bound selection algorithm off and assess whether all traits colocalize. 
+We can choose to switch the Bayesian divisive clustering algorithm off and assess whether all traits colocalize. 
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.alg = FALSE);
