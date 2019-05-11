@@ -6,7 +6,6 @@ output:
   pdf_document:
     toc: yes
     toc_depth: 3
-    number_sections: true
   html_notebook:
     theme: united
     toc: yes
@@ -160,7 +159,7 @@ The conditionally uniform prior framework assigns all non-null hypotheses (i.e. 
 ```{r}
 prior.options = c(1e-4, 1e-10, 1e-25, 1e-100);
 for(i in prior.options){
-  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = TRUE, prior.1 = i);
+  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = TRUE, prior.1 = i, reg.steps = 2);
   print(paste0("prior.1 = ",i));
   print(res);
   }
@@ -186,8 +185,6 @@ for(i in prior1.options){
   }
 }
 ```
-
-
 
 
 We notice that results deduced under the variant specific priors are   
