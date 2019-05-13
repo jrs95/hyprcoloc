@@ -2,22 +2,21 @@
 title: "HyPrColoc"
 author: "Christopher Foley & James Staley"
 date: "9/05/2019"
-output:
-  pdf_document:
-    toc: yes
-    toc_depth: 3
-  html_notebook:
-    theme: united
-    toc: yes
-  html_document:
-    df_print: paged
-    toc: yes
-
-#output: rmarkdown::html_vignette
-#vignette: >
-#  %\VignetteIndexEntry{hyprcoloc}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hyprcoloc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+#output:
+#  pdf_document:
+#    toc: yes
+#    toc_depth: 3
+#  html_notebook:
+#    theme: united
+#    toc: yes
+#  html_document:
+#    df_print: paged
+#    toc: yes
 ---
 
 
