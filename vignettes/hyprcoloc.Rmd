@@ -2,22 +2,23 @@
 title: "HyPrColoc"
 author: "Christopher Foley & James Staley"
 date: "9/05/2019"
-output:
-  pdf_document:
+#output:
+#  pdf_document:
+#  html_notebook:
+#    theme: united
+#    toc: yes
+#  html_document:
+#    df_print: paged
+#    toc: yes
+output: 
+    rmarkdown: html_vignette
     toc: yes
     toc_depth: 3
-  html_notebook:
-    theme: united
-    toc: yes
-  html_document:
-    df_print: paged
-    toc: yes
 
-#output: rmarkdown::html_vignette
-#vignette: >
-#  %\VignetteIndexEntry{hyprcoloc}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
+vignette: >
+  %\VignetteIndexEntry{hyprcoloc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -52,8 +53,16 @@ ses <- hyprcoloc::test.ses
 head(ses)
 ```
 
+In the test dataset there are ten traits with summary association and standard error data for around 1000 snps. The summary association data are weakly correlated, owing to generating data from studies containing overlapping participants (/samples). We can call the correlation and LD matrices by typing
 
-### Basic set-up: assuming independce between studies 
+```{r}
+trait.cor <- hyprcoloc::test.corr
+ld.matrix <- hyprcoloc::test.ld
+```
+
+Note that in the sample data, traits 1-5 form a cluster of colocalized traits; traits 6-8 form a distinct cluster of colocalized traits and; traits 9-10 form distinct cluster of colocalized traits.  
+
+### Basic set-up: assuming independence between studies 
 
 By default HyPrColoc assumes that each trait is measured in a distinct study, i.e. that the participants do not overlap between studies, so that between study estimates of regression coefficients (betas) are independent. The HyPrColoc function will automatically employ the Bayesian divisive clustering algorithm to identify clusters of colocalized traits. Each study (/trait) will be assigned a name corresponding to their column position and similarly the snps will be assigned names according to row position. To input trait and snp labels we make use of the "trait.names" and "snp.id" variables, e.g.      
 
@@ -127,116 +136,159 @@ res
 ```
 
 
-## Mapping pleiotropy: a quick and robust alternative to PHeWAS 
+## Mapping pleiotropy: a quick alternative to PHeWAS 
 
 The regional association can be used as an alternative to a PHeWAS assessment. To see this, we first discuss how the regional association probability is computed.
 
-For each of $Q$ snps in the region, we compute the the probability that a snp is associated with all traits and divide this by the sum of the probabilities that: one of the $Q$ snps is associated with all traits; all but one trait; all but two traits and so on... Consequently, a 'large' (close to 1) regional association probability indicates that one or more snps in the region share an association with all traits. Small values indicate that there is not a snp in the region associated with all traits, the divisive clustering algorithm with then attempt to identify a subset of traits which have a regional association probability above a user defined threshold (default $P_{R}^{\ast}= 0.5$). 
+For each of $Q$ snps in the region, we compute the the probability that a snp is associated with all traits and divide this by the sum of the probabilities that: (i) one of the $Q$ snps is associated with all traits; (ii) one of the snps is associated with all but one trait; (iii) one of the snps is associated with all but two traits and so on... Notably there is no restriction on the number of causal variants in the region under a regional  association assessment. A 'large' (close to 1) regional association probability indicates that one or more snps in the region share an association with all traits. This may be owing to one or more shared causal variants between the traits or because all traits have one or more causal variants and at least one causal variant per trait is in strong LD with a causal variant from each of the other traits. Small values indicate that there is not a snp in the region associated with all traits, this does not preclude the possibly that one or more snps might be associated a subset of the traits, however. The divisive clustering algorithm contains the option (bb.selection = "reg.only") to identify clusters of traits which share a regional association only, avoiding the alignment phase and therefore the colocalization assessment. Clusters of regionally associated traits are identified when the regional association probability is above a user defined threshold (default $P_{R}^{\ast}= 0.5$ which is likely to anti-conservative and should be increased). As an example, below we assess any evidence of regional associations between the traits in the sample dataset and we set the threshold regional association probability to be $0.9$:
 
-The regional association probability aggregates evidence from each snp separately, hence there is no restriction on the number of causal variants in the region. This means that large values can arise in a number of ways which we now describe. A large regional association probability can occur when all traits have a single causal variant in the region and either: (i) the causal variant is shared across all traits or; (ii) at least one trait has a distinct causal variant and the distinct causal variants are on strong LD with one another. Alternatively, a large probability can occur because one or more traits have multiple causal variants in the region and either: (i) one or more causal variants are shared across all traits or; (ii) at least one trait has a distinct causal variant, but each trait has a causal variant in strong LD with one of the causal variants associated with all other traits.
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "reg.only", reg.thresh = 0.9);
 res
 ```
 
-The results indicate that there exists one or more snps that share associations with traits 1-5, which is expected from our previous colocalization analysis. We note that there exists at least one snp which is associated with traits 6-10 and that the most likely snp is rs12117612, which explains 31.4% of the regional association probability. This contrasts with the results from our earlier colocalization assessment which indicated that traits 6-10 do not all colocalize, highlighting some distinction between shared genetic associations between traits and multi-trait colocalization at a single causal variant. 
+The results indicate that there exists one or more snps that share associations with traits 1-5, a result anticipated from the results of our previous colocalization analysis. However, by avoiding a colocalization assessment we identify that traits 6-10 all appear to have a shared association with at least one snp, the most likely shared snp is rs12117612 which explains 31.4% of the regional association probability. This contrasts with the results from our earlier colocalization assessment which indicated that traits 6-10 do not all colocalize and highlights some distinction between traits which have a shared genetic associations and those which colocalize at a single causal variant. 
 
 
 ## An analysis protocol: assessing stability of clusters via a sensitivity analysis 
 
 It is important that users of the software ackowledge that the performance of HyPrColoc is particularly dependendant on the choice of prior configuration probabilities used (and any associated hyper-parameters) as well as the choice of regional and alignment thresholds, as these combine to quantify a lower bound with which we accept that a cluster of traits colocalize (i.e. clusters are identified when $P_RP_{A}\geq P^{\ast}_{R}P^{\ast}_{A}$). In some situations this senstivity might be modest, whilst in others it might be large. For example, through extensive simulations, we note that in the analysis of large numbers of traits, using only the default algorithm settings, can regularly result in the trait clusters containing (typically only a single) false positive. Avoiding this issue is complex as it is unlikely that there exists a one-size-fits-all approach to setting the prior configuration probabilities and likewise the regional and alignment threshold parameters. Hence, to go someway to addressing these issues we provide an analysis protocol template, to assess the strength of any conclusions. 
 
+The full protocol template is at the end of this section.
+
 ### Assessing sensitivity to changes in the prior configuration parameters 
 
-An important feature of the HyPrColoc software is that it allows for some sensitivity to the choice of causal configuration priors to be assessed. Two prior choices are presented: (i) conditionally uniform priors, which assumes that all causal configurations relating to a given hypotheses are equally likely, and; (ii) variant specific prioris, which, for each variant, focuses on tuning the probability that a variant is colocalized with a subset of traits, for all possible subsets.    
+An important feature of the HyPrColoc software is that it allows for some sensitivity to the choice of causal configuration priors to be assessed. Two prior choices are presented: (i) conditionally uniform priors, which assumes that all causal configurations relating to a given hypotheses are equally likely, and; (ii) variant specific prioris, which, for each variant, focuses on tuning the probability that a variant is colocalized with a subset of traits, for all possible subsets. HyPrColoc has some dependency to both the type of prior configuration assumed and the parameters associated with each prior set-up. In this section we aim to outline an approach to assessing any sensitivity to these choices and moreover some guidance on drawing conclusions from sesnsitivity analyses.  
+
+HyPrColoc jointly assesses colocalization across multiple traits and we use this detail to our advantage in our sensitivity analyses. The general principle is as follows: perform two or more analyses in which the probability that a variant is associated with more than one trait decreases and for each assessment compute the number of traits within each cluster that overlapp between analyses. Any overlap in the collection of traits within each cluster, which use different choices of prior paramater values, would then be a 'stable' cluster of colocalized traits. We might wish to do this for each collection of putatively colocalized traits identified from the primary analyses (which may or may not use the default settings) or repeat the whole analysis again under a different parameter specification.   
 
 
 ##### Conditionally uniform configuration priors:   
 
-The conditionally uniform prior framework assigns all non-null hypotheses (i.e. those in which at least one trat have a causal variant in the region) the same probaility. Note that this does not mean that all causal configuration prior probailities are the same, mearly that the prior probabilities of each causal configuration associated with a distinct hypothesis must add up to the same amount between hypothesis. This means that the conditionally uniform prior strategy benefits from automatically adjusting to both the numbers of traits and the number of snps included in analyses, i.e. the configuration priors are a function of the number of traits and snps.  The approach does require specificying one parameter "prior.1", which is the ratio of the prior probability of a any hypothesis in which at least one trait has a causal variant in the region ($P(H_{j})$) divided by the null-hypothesis that no traits have a causal variant in the region $P(H_{0})$, i.e. $prior.1 = \frac{H_{j}}{H_{0}}$.  By default, we set $prior.1=10^{-4}$, so that any alternative hypothesis is 10000 times less likely a-priori relative to the null hypothesis. The we choose this value as the role of "prior.1" can be considered similarly to the role of $p1$ in the widely used sofwtare "COLOC".  We now explore sensitivity of our results to the specification of "prior.1" across a wide range of initializations,   
+The conditionally uniform prior assigns all non-null hypotheses (i.e. those in which at least one trait has a causal variant in the region) the same probaility. Note that this does not mean that all causal configuration prior probailities are the same, rather that the prior probabilities of each causal configuration associated with a distinct hypothesis must add up to the same amount. This means that the conditionally uniform prior benefits from automatically adjusting to both the number of traits and the number of snps included in analyses.  The approach requires specificying one parameter only, "prior.1", which is the ratio of the prior probability of a hypothesis in which at least one trait has a causal variant in the region $P(H_{j})$ divided by the null-hypothesis that no traits have a causal variant in the region $P(H_{0})$, i.e. $prior.1 = \frac{P(H_{j})}{P(H_{0})}$.  By default, we set $prior.1=10^{-4}$, so that a non-null hypothesis is 10000 times less likely a-priori relative to the null hypothesis. The default choice $10^{-4}$ is motivated in part by the role of $p1$ in the widely used sofwtare "COLOC", where $p1$ is the prior prbability that a snp is causally associated with one trait in the region whereas $prior.1$ can be thought of as the prior probability of a hypothesis, in which at least one trait has a causal variant in the region. As the number of traits in the sample increases the default choice of $prior.1$ may be become increasingly inappropriate. It is therefore important to explore sensitivity of any results to the specification of "prior.1" which we now do. 
+
+As the number of traits in the test dataset is 'small', we choose to repeatedly run HyPrColoc and for each run change the value $prior.1\in {10^{-4}, 10^{-10}, 10^{-20}, 10^{-25}, 10^{-100}}$. If the number of traits in the sample were large we might consider selecting a cluster of traits with which to assess cluster stability.
 
 ```{r}
-prior.options = c(1e-4, 1e-10, 1e-25, 1e-100);
+prior.options = c(1e-4, 1e-10, 1e-20, 1e-25, 1e-100);
 for(i in prior.options){
-  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = TRUE, prior.1 = i, reg.steps = 2);
+  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, 
+                   uniform.priors = TRUE, prior.1 = i, reg.steps = 2);
   print(paste0("prior.1 = ",i));
   print(res);
   }
 ```
 
-Hence, when analysing the sample dataset using the conditionally uniform prior set-up, the results from HyPrColoc have a weak dependence on the specification of "prior.1". Moreover, setting $prior.1 \in [10^{-4}, 10^{-20}]$ the colocalization results do not change. It should however be noted that the posterior probabilities associated with each cluster of colocalized traits is markedly larger than those computed using the variant specific prior configuration set-up.
+The results reveal that: in the sample dataset provided and when using the conditionally uniform priors, the results from HyPrColoc are weakly dependendent on the specification of "prior.1". In particular, across the range $prior.1 \in [10^{-4}, 10^{-20}]$ the HyPrColoc results do not change beyond the fourth decimal place. We might conclude therefore that the three clusters of traits 1-5; 6-8 and separately 9-10 are stable clusters of colocalized traits. When $prior.1 = 10^{-25}$ only the cluster of traits $1-5$ are deemed to colocalize and when $prior.1 = 10^{-100}$ no traits are deemed to colocalize. So, do none of the traits truly colocalize? No, it should be noted that we specified the values $prior.1\in {10^{-4}, 10^{-10}, 10^{-20}, 10^{-25}, 10^{-100}}$ not because these are all 'reasonable' values to assess prior sensitivty, but rather that in the test dataset we tried to find a value, i.e. $prior.1=10^{-25}$, below which evidence supporting the traits forming clusters of colocalized traits is 'small' so that we fail to detect colocalization between the traits. In practice and in the absence of a prior belief concerning $prior.1$, a reasonable choice will depend on the number of traits under consideration. However, to guide analyses we suggest comparing results using the default $10^{-4}$ with those when $prior.1 = 10^{-5}$, i.e. an order of magnitude reduction in "prior.2", for sensitivity analyses.     
+
+Note that, using the conditionally uniform prior with default $prior.1=10^{-4}$, the posterior probabilities computed for each cluster of colocalized traits is larger than those computed using the default parameters values under the variant specific prior configuration set-up; we now illustrate this.
 
 
 ##### Variant specific configuration priors (default):   
 
-The variant specific prior configuration set-up is a multi-trait extention to the configuration priors used in COLOC. Users familiar with this software will no doubt know that the performance of COLOC is sensitive to the choice of configuration prior parameters and, when using a multi-trait extention of this prior set-up, we will see that HyPrColoc is also sensitive to the choice of prior parameters. However, as HyPrColoc jointly assesses colocalization across multiple traits, the multi-trait assessment provides an ideal platform to assess any prior senstivity. In particular, by increasing (alternatively decreasing) the prior parameter values we can assess how stable the clusters of putatively colocalized traits are, i.e. we can assess the overlap of the clusters of putatively colocalized traits returned from two separate analyses each of which uses a distinct value for the prior probability of colocalization. The general principle 
+The variant specific causal configuration priors in HyPrColoc are, in some sense, a multi-trait extention to the causal configuration priors used in COLOC (for two traits they are identical). Users familiar with the COLOC software will no doubt know that the performance of COLOC is sensitive to the choice of the causal configuration prior parameters. The HyPrColoc multi-trait extention of this prior set-up is also sensitive to the choice of prior parameters.  
 
-can be used to  advantage   To use this strategy, we require the specification of two parameters: "prior.1" denoting the probability that a snp is associated with a songle trait and "prior.2" such that $1-prior.2$ is the prior probaility that a snp is associated with an additonal trait given that it is associated with at least one trait,  $1-prior.2^2$ is the prior probability that the snp is associated with a third trait given it is associated with two other traits and so on... By default $prior.1 = 10^{-4}$ and $prior.2 = 0.98$, hence the prior probability that any snp is a ssociated with a trait is 1 in 10000, matching that used in COLOC; the prior probability that the snp is associated with a second trait, conditional on association with one trait, is 1 in 50; the prior probaility that it is associated with a third trait given association with two other traits is just under 1 in 25; and so on... Notice that the marginal probability that a snp is associated with an increasing number of traits is always small and decreasing, e.g. $\frac{1}{10^{4}}*\frac{1}{50}*\frac{1}{25}\dots$  
+The HyPrColoc variant specific priors require the specification of two parameters: "prior.1", denoting the probability that a snp is associated with a single trait and; "prior.2", such that (i) $1-prior.2$ is the prior probaility that a snp is associated with an additonal trait given that it is associated with one trait; (ii) $1-(prior.2)^2$ is the prior probability that the snp is associated with a third trait given it is associated with two other traits; (iii) $1-(prior.2)^3$ is the prior probability that the snp is associated with a fourth trait given three and so on... By default $prior.1 = 10^{-4}$, hence the prior probability that any snp is a ssociated with a single trait is 1 in 10000 (matching that used in COLOC). The default for $prior.2 = 0.98$, meaning that the prior probability that the snp is associated with a second trait, conditional on association with one trait, is 1 in 50; the prior probaility that it is associated with a third trait given association with two other traits is around 1 in 25; and so on... Notice that the marginal probability that a snp is associated with an increasing number of traits is always small and monotonic decreasing, e.g. $\frac{1}{10^{4}*50*25*\dots}$.   
+
+When using the variant specific prior, results tend to be most sensitive to the choice of $prior.2$ as this controls the prior probability of each additional colocalized trait. Hence, we focus our sensitivity analysis on varying this parameter. We consider the range of values $prior.2 \in\{0.95, 0.98, 0.99, 0.999\}$, meaning that the probability of a snp being associated with a second trait given its association with one trait can be: (i) 1 in 20, i.e. $prior.2=0.95$; (ii) 1 in 50, i.e. $prior.2=0.98$; (iii) 1 in 100, i.e. $prior.2=0.99$; (ii) 1 in 1000, i.e. $prior.2=0.999$, 
 
 ```{r}
-prior1.options = c(1e-4);
+prior.1 = 1e-4;
 prior2.options = c(0.95, 0.98, 0.99, 0.999);
-for(i in prior1.options){
-  for(j in prior2.options){
-  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = FALSE, prior.1 = i, prior.2 = j);
-  print(c(paste0("prior.1 = ",i), paste0("prior.2 = ",j)));
+for(i in prior2.options){
+  res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid,
+                   uniform.priors = FALSE, prior.1 = prior.1, prior.2 = i);
+  print(c(paste0("prior.1 = ",prior.1), paste0("prior.2 = ",i)));
   print(res);
-  }
 }
+
 ```
 
+The results indicate that traits 1-5 appear to form a 'stable' cluster of colocalized traits, i.e. across the range of prior probabilities considered the traits 1-5 always colocalize. For the two separate clusters comprising traits 6-8 and traits 9-10, the results differ depending on the choice of $prior.2$. Firstly, we note that the posterior probability of colocalization for each of these clusters decreases as a function of $1-prior.2$, but the reduction is not the same between clusters because the cluster sizes differ. That is, for $prior.2\in\{0.95, 0.98, 0.99\}$ the posterior probability of the cluster of size three (traits 6-8) decreases from $0.964$ to $0.846$, whereas for the cluster of size two (traits 9-10) it reduces from $0.958$ to $0.821$. In summary, the larger the number of traits in a cluster the less sensitive results are to the specification of $prior.2$. We see this as a positive feature of the HyPrColoc variant specific prior. However, if $1-prior.2$ is reduced by an order of magnitude from $10^{-2}$ to $10^{-3}$, i.e. a drop from 1 in 100 to 1 in 1000, we note that of the two clusters of traits (6-8 and 9-10) only traits 7-8 appear to colocalize and the posterior probability of colocalization is weaker than before $0.739$. So, is it true that only traits 1-5 and separately 7-8 colocalize in the sample? Again the answer is no. As before, in the absense of a prior belief concerning $prior.2$, a reasonable value for $prior.2$ will depend on the number of traits under consideration. As a guide, we suggested assessing results from $prior.2\in \{0.98, 0.99\}$, i.e. the HyPrColoc default and when considering that the probability of a snp having an additional association given an association with one trait is 1 in 100.
 
-We notice that results deduced under the variant specific priors are   
+One additional point to consider is evidential strength, if we look at the output above when setting $prior.2\in \{0.98, 0.99\}$, we note that the posterior probability of colocalization between the traits in the clusters 6-8 and 9-10 both fall below $0.85$. Thus, setting a more stringent threshold for colocalization between the traits, e.g. only return results when a cluster of traits colocalize with posterior probability above $0.85$, will necessarily alter the results presented by HyPrColoc; which we now demonstrate. 
+
 
 ##### Evidential strength and the regional and alignment thresholds  
 
-The default regional $P_{R}^{\ast}$ and alignment $P_{A}^{\ast}$ paramter thresholds are dependent on the choice of configuration prior. The default regional threshold and alignment thresholds using conditionally uniform (CU) configuration priors are $P_R^{\ast}=P_{A}^{\ast}=0.7$ whereas for variant specific (VS) priors the thresholds are set to  $P_R^{\ast}=P_{A}^{\ast}=0.5$. Accordingly, the algorithm will deduce that a set of traits are colocalized when  $P_RP_{A}\geq 0.49$ using CU priors and $P_RP_{A}\geq 0.25$ when using VS priors. We do this because CU priors tend to have a slightly increased false positive rate. Note, these parameter choices are a consequence of extensive testing in simulation scenarios, aiming to maximise the true detection rate whilst minimising the number of false positives. We therefore DO NOT recommend reducing either of these parameters. The defaults should be viewed as lower bounds.
+HyPrColoc estimates the posterior probability of colocalization between a cluster of traits by multiplying a regional association probability $P_{R}$ and an alignment probability $P_{A}$, i.e. $P_{R}*P_{A}$. The algorithm concludes that a cluster of traits colocalize if these values are above two threshold values: the regional probability threshold $P_{R}^{\ast}$ and the alignment probability threshold $P_{A}^{\ast}$. As noted from the previous section, the posterior probability can vary by the choice of configuration priors used. Consequently, the default regional and alignment thresholds vary when using either the conditionally uniform configuration priors, i.e. $P_R^{\ast}=P_{A}^{\ast}=0.7$, or the variant specific priors, i.e. $P_R^{\ast}=P_{A}^{\ast}=0.5$. Accordingly, the algorithm will deduce that a set of traits are colocalized when  $P_RP_{A}\geq 0.49$ using CU priors and $P_RP_{A}\geq 0.25$ when using VS priors. Note, these parameter choices are a consequence of extensive testing in simulation scenarios, aiming to maximise the true detection rate whilst minimising the number of false positives. We therefore DO NOT recommend reducing the value of either of these parameters. The defaults should be viewed as lower bounds.
 
-If interest lies in identifying sets of colocalized traits above a certain posterior probability, more stringent regional and alignment threshold parameters can be chosen, e.g.
+If interest lies in identifying sets of colocalized traits above a certain posterior probability, more stringent regional and alignment threshold parameters can be chosen. For example if we set $P_R^{\ast}=P_{A}^{\ast}=0.95$ so that colocalized traits are identified when $P_RP_{A}\geq 0.9025$ we see that
 
 ```{r}
-res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.selection = "regional", uniform.priors = FALSE, reg.thresh = 0.95, align.thresh = 0.95);
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = FALSE,
+                 reg.thresh = 0.95, align.thresh = 0.95);
 res
 ```
 
+Hence, again we identify that the clusters of traits with very strong evidence of colocalizing are traits 1-5 and separately 7-8. However, some of you might notice that in our previous assessment of the data traits 6-8 colocalized with posterior probability $0.916$ and traits 9-10 with posterior probability $0.902$. Traits 9-10 fall below our posterior threshold, however traits 6-8 do not. Why is when we set $P_R^{\ast}=P_{A}^{\ast}=0.95$ do we not identify the full cluster 6-8 rather than just 7-8? The answer is that while the posterior probability of traits 6-8 colocalizing is $0.916$ either the regional or alignment probability is not larger than the threshold $0.95$ (when trait 6 is included in the cluster). In this situation the algorithm will fail to identify the maximum number of clusters of traits which colocalize above $0.902$. 
+
+In our extensive testing of the HyPrColoc algorithm we noticed that we can avoid this if we instead set both the regional and alignment statistics to the minimum posterior probability that determines that a cluster of traits are colocalized. Hence, in the above example we would instead set $P_R^{\ast}=P_{A}^{\ast}=0.9025$, i.e.     
+
+```{r}
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, uniform.priors = FALSE,
+                 reg.thresh = 0.9025, align.thresh = 0.9025);
+res
+```
+
+which returns the full cluster of traits 6-8. 
+
+This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}$ are set to be 'equal' and 'both' reflect the minimum probability with which we accept clocalization, not the product $P_{R}*P_{A}$. 
+
 ## Analysing correlated traits
 
-When interest lies in identifying colocalization across a set of traits whose summary data are correlated (due to overlapping participants) three additional pieces of information are required: (i) a matrix containing the putative correlation between the traits; (ii) a matrix containing the LD between the snps in the region and; (iii) a matrix containing the proportion of shared participants between each pair of studies. Note the matrix of overlapping sample proportions has diagonal elements set to 1 and off diagonal elements $(i,j)$ denote the proportion of overlap between the $i$'th and $j$'th studies, i.e. if N denotes the total number of overlapping participants and $\{N_{i},N_{j}\}$ denote the numbers of participants in the $i$'th and $j$'th studies respectively, then $N/\left(N_{i}N_{j}\right)$ is the  $(i,j)=(j,i)$ element. As sample overlap information may not always be available, the HyPrColoc default assumes all studies have the same participants.   
+When interest lies in identifying colocalization across a set of traits whose summary data are correlated (due to overlapping participants) three additional pieces of information are required: (i) a matrix containing the putative correlation between the traits; (ii) a matrix containing the LD between the snps in the region and; (iii) a matrix containing the proportion of shared participants between each pair of studies. Note the matrix of overlapping sample proportions has diagonal elements set to 1 and off diagonal elements $(i,j)$ denote the proportion of overlap between the $i$'th and $j$'th studies, i.e. if N denotes the total number of overlapping participants and $\{N_{i},N_{j}\}$ denote the numbers of participants in the $i$'th and $j$'th studies respectively, then $N/\left(N_{i}N_{j}\right)$ is the  $(i,j)=(j,i)$ element. As sample overlap information may not always be available, HyPrColoc defaults to assumes all studies have the same participants.   
 
 #### Important, before going further...
 
-Should analyses be adjusted for observed correlation between study summary data?
+Question: should analyses be adjusted for observed correlation between study summary data?
 
-It is our recommendation that users first consider whether this is necessary. There are several points to consider. Firstly, traits which are strongly correlated are in general more likely to colocalize. This has two important consequences: (i) whilst special exceptions exist, generally the a-priori probability of colocalization between two strongly correlated traits is necessarily larger than two traits that are weakly correlated, analyses which ignore this are less likely to capture the largest set of traits which are truley colocalized and; (ii) when a subset of traits which are truley colocalized are identified, one or more of the correlated traits can be wrongly identified as not colocalizing due to mathematical subtleties in the processing of the correlation matrices and NOT because of  some underlying biological importance, this has serious consequences on how we draw biological conclusions from correlation adjusted analyses. Secondly, analysing correlated summary data requires much more computing power and time, owing to many rounds of expensive matrix inversion. Finally, in our extensive testing, when wronly assuming independence between study data we found little to no impact on the false positive detection rate in contrast to when correctly assuming independence.  
+It is our recommendation that users first consider whether adjusting for observed correlation between summary data is necessary. We here detail several points to consider.
+
+Traits which are strongly correlated are in general more likely to colocalize. This has two important consequences: (i) whilst special exceptions exist, generally the a-priori probability of colocalization between two strongly correlated traits is necessarily larger than two traits that are weakly correlated, analyses which ignore this are less likely to capture the largest set of traits which are truley colocalized (see the HyPrColoc text for more on this) and consequently; (ii) if a subset of the cluster of traits which truley colocalize are identified, it is possible (moreover likely) that one or more of the correlated traits has been wrongly removed from the cluster due to mathematical subtleties when inverting the correlation matrix (to estimate the posterior probability of colocalization), and not because of some underlying biological importance that one of the traits has over the another. 
+
+As something of a discussion point and an example of (ii), let's suppose interest lies in assessing diastolic blood  pressure (DBP) and systolic blood pressure (SBP), two strongly correlated traits, and coronary heart disease.  Suppose we perform a joint analysis of the three traits which accounts for correlation in the summary data, but not a-priori trait correlation. Suppose further that we identify a region in which SBP and CHD colocalize only. What do we conclude? Do we assume that our findings provide evidence toward SBP being the more important blood pressure trait for CHD risk in this region? Now suppose we question this result by performing two separate colocalization analyses (i) including SBP and CHD only and; (ii) including DBP and CHD only. Our findings reveal that in this region CHD colocalizes with SBP and separately colocalizes with DBP at the same snp. What then is the conclusion? Is there a more important blood pressure trait here? Well, we demonstrate in the HyPrColoc supplementary material that if analyses account for 'known', i.e. a-priori, trait correlation by upweighting the prior probability of colocalization between strongly correlated traits as well as accounting for observed correlation, through the summary effects, HyPrColoc regularly identifies the full set of truly colocalized traits. So, in the case of SBP, DBP and CHD, additionally accounting for 'known' correlation between SBP and DBP might overcome this (hypothetical) issue. The difficulty with this approach is identifying a robust way to incorporate 'known' trait correlation into analyses. This is an outstanding problem. It appears it can be avoided however, by ignoring both observed and a-priori correlations in analyses, i.e. assuming independence between the studies and the traits. We demonstrate that this strategy regularly identifies the maximum number of truly colocalized traits and at a fraction of the computational cost of analyses which account for correlation. 
+
 
 #### Analysing correlated traits, continued... 
 
 Our command line tool can automatically compute trait correlation (using a tetrachoric correlation technique) and LD information. However, the R-package requires users to have this information to hand. 
 
 ```{r}
-trait.cor <- hyprcoloc::test.corr
-ld.matrix <- hyprcoloc::test.ld
-sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2]) # default assumption, hence presented for clarity
+# default assumption, hence presented for clarity:
+sample.overlap = matrix(1, dim(betas)[2], dim(betas)[2]); 
 ```
 
 ##### Variant specific priors
 
 ```{r}
-res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor, ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = FALSE);
+ptm = proc.time();
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor, 
+                 ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = FALSE);
+time.corr = proc.time() - ptm;
 res
 ```
 
 ##### Conditionally uniform priors
 
 ```{r}
-res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor, ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = TRUE);
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.cor = trait.cor,
+                 ld.matrix = ld.matrix, sample.overlap = sample.overlap, uniform.priors = TRUE);
 res
 ```
 
 ##### Assuming independence (which correctly captures the data generating model)
 
+Recall that when we incorrectly assumed that the traits were measured in studies with no overlapping participants, we correctly detected that traits 1-5; traits 6-8 and traits 9-10 form three clusters of colocalized traits and moreover we identified this at a fraction of the computational cost of accounting for correlations between summary data
+
+
 ```{r}
+ptm = proc.time();
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid);
-res
+time.ind = proc.time() - ptm;
+time.ind;
+time.corr;
 ```
+
+Thus, assuming independence between the studies not only correctly identifies the three clusters of colocalized traits, but does so around 3500 times faster than accounting for non-indepdence. 
