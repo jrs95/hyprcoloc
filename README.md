@@ -7,7 +7,7 @@ Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) analyses.
 ## Installation
 1. install.packages("devtools")
 2. library(devtools)
-3. install_github("jrs95/hyprcoloc", build_vignettes=T)
+3. install_github("jrs95/hyprcoloc", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
 4. library(hyprcoloc)
 5. browseVignettes("hyprcoloc")
 

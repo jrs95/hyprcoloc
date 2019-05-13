@@ -2,6 +2,7 @@
 title: "HyPrColoc"
 author: "Christopher Foley & James Staley"
 date: "9/05/2019"
+<<<<<<< HEAD
 #output:
 #  pdf_document:
 #  html_notebook:
@@ -15,6 +16,9 @@ output:
     toc: yes
     toc_depth: 3
 
+=======
+output: rmarkdown::html_vignette
+>>>>>>> c2d82f8402389fe2d894d580f46f201370365b56
 vignette: >
   %\VignetteIndexEntry{hyprcoloc}
   %\VignetteEngine{knitr::rmarkdown}
