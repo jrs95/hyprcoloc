@@ -135,7 +135,7 @@ res
 ```
 
 
-## Mapping pleiotropy: a quick alternative to PheWAS 
+## Mapping pleiotropy: an alternative to PheWAS 
 
 The regional association can be used as an alternative to a PheWAS assessment. To see this, we first discuss how the regional association probability is computed.
 
