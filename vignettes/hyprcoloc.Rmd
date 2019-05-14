@@ -10,10 +10,9 @@ date: "9/05/2019"
 #  html_document:
 #    df_print: paged
 #    toc: yes
-output: 
-    rmarkdown: html_vignette
-    toc: yes
-    toc_depth: 3
+output: rmarkdown::html_vignette
+#    toc: yes
+#    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{hyprcoloc}
   %\VignetteEngine{knitr::rmarkdown}
@@ -82,15 +81,6 @@ From the above output we see that, for each iteration of the algorithm, HyPrColo
 
 *Note that a 'large' regional association probability is evidence that one or more snps in the region have shared associations across the traits, the result is similar to a PHeWAS (Phenome-wide association study) and we discuss this more later. The results above show that in three iterations HyPrColoc identified that traits 1-5 form a cluster of colocalized traits, traits 6-8 form a separate cluster of colocalized traits and finally that traits 9 and 10 also colocalize. We see that the cluster of traits 1-5 have a posterior probability of $1$ of being colocaized, hence the regional association probability is also $1$ and that the candidate snp rs11591147 explains 100\% of the posterior. Thus, there is very strong support that traits 1-5 colocalize and that rs11591147 be taken as the candidate causal snp in the region. On the other hand, traits 9 and 10 show strong evidence of colocalizing, having a posterior probability of $0.9$, but there is weak evidence to support rs7524677 as the causal snp in the region. This example helps to illustrate that: while a cluster of traits can show strong evidence of colocalization the snp most likely to explain colocalization between the traits can be vague.
 
-#### Choosing a subset of traits to analyze
-
-We can choose to assess evidence of colocalization across a subset of the traits. For example, let's suppose interest lies in assessing the first two traits only, in this situation we make use of the "trait.subset" variable, e.g.
-
-```{r}
-res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.subset = c("T1","T2"));
-res
-```
-
 #### Labelling a trait as either continuous or binary in analyses
 
 For technical reasons, analyses have a dependence on whether a trait is continuous or binary. To let HyPrColoc know which traits are continuous (coded 0) or binary (coded 1) we use the "binary.outcome" variable. For example, suppose the first three traits are binary, then we type 
@@ -100,6 +90,51 @@ binary.traits = c(1,1,1,rep(0,dim(betas)[2]-3));
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, binary.outcomes = binary.traits);
 res
 ```
+
+#### Choosing a subset of traits to analyze
+
+We can choose to assess evidence of colocalization across a subset of the traits. For example, let's suppose interest lies in assessing the first two traits only, in this situation we make use of the "trait.subset" variable, e.g.
+
+```{r}
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, trait.subset = c("T1","T2"));
+res
+```
+
+#### Computing the credible sets of snps for each cluster of colocalized traits 
+
+To output a fine-mapping score, i.e. a probability that a snp is likley to be causal, for each of the snps in the region we make use of the "snpscores" variable in analyses. When we do this HyPrColoc outputs a 'list' of results where the first element contains the results displayed previously and the second element containts the snp scores for each of the clusters of colocalized traits identified. Let's have a look, if we now type
+
+```{r}
+res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, snpscores = TRUE);
+class(res);
+```
+
+we see that the results 'res' are now a list. The element "res[[1]]" contains the results from before, i.e.
+```{r}
+res[[1]];
+```
+
+The element "res[[2]]" is a list of length 3 containing the snp scores for each of the 3 clusters of colocalized traits (presented in the same order are the clusters in "res[[1]]"), i.e "res[[2]][[1]]" is a vector of length the number of snps in the region and gives a probability that each snp is the causal variant in the region for the cluster of traits 1-5. "res[[2]][[2]]" returns the same information but now for the cluster of putatively colocalized traits 6-8 and "res[[2]][[3]]" for the cluster 9-10. 
+
+```{r}
+head(res[[2]][[1]]);
+```
+
+HyPrColoc has an inbuilt function to triage this information down to a "credible set" of snps for each cluster using the output from the "hyprcoloc" function when "snpsocres = TRUE". The default is to identify a credible set of snps which explain 95% of the posterior probability of colocalization for each cluster of colocalized traits. This can be performed using the "cred.set" function, i.e.
+
+```{r}
+cred.sets(res, value = 0.95);
+```
+
+We see that snp "rs11591147" explains all of the posterior probability of colocalization between the cluster of traits 1-5. This is therefore a strong candidate causal variant in the region. However for the second cluster of traits (6-8), there is no clear candidate causal variante as both "rs12117612" and "rs7532349" explain equal amounts of the posterior probability of colocalization and, as we now see are in perfect LD with one another:
+
+```{r}
+ld.matrix["rs12117612","rs7532349"];
+```
+
+Together these two variants explain nearly 90% of the posterior probability of colocalization and it is therefore likely* that the traits do colocalize, however it is impossible (using HyPrColoc) to prioritise one of these variants over the other. To prioritise one snp external information would need to be integrated, which can be (e.g.) biological information or by adding another layer to the analysis in which the same trait(s) is measured in a different study. 
+
+*One natural question to ask is, if the two snps are in perfect LD why have we deduced that the traits colocalize. This detail is a result of the influence of the prior probability of colocalization on analyses. The number of causal configurations which reflect colocalization between the traits is much smaller than configurations which do not represent colocalization between the traits. This means that if we were to set all prior configuration probabilities equal we would almost certainly never identify colocalization between the traits, even if the shared associations between traits were truly owing to a colocalization mechanism. Thus a colocalization causal confiugration prior must be larger than a non-colocalization causal configuration prior in general. But how much larger? This is complicated and we therefore provide more detail on this issue later.    
 
 ### The Bayesian divisive clustering algorithm
 
