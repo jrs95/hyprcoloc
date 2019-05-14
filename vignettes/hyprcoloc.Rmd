@@ -106,15 +106,14 @@ To output a fine-mapping score, i.e. a probability that a snp is likley to be ca
 
 ```{r}
 res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, snpscores = TRUE);
-class(res);
 ```
 
-we see that the results 'res' are now a list. The element "res[[1]]" contains the results from before, i.e.
+Note that the results 'res' are now a list. The element "res[[1]]" contains the results from before, i.e.
 ```{r}
 res[[1]];
 ```
 
-The element "res[[2]]" is a list of length 3 containing the snp scores for each of the 3 clusters of colocalized traits (presented in the same order are the clusters in "res[[1]]"), i.e "res[[2]][[1]]" is a vector of length the number of snps in the region and gives a probability that each snp is the causal variant in the region for the cluster of traits 1-5. "res[[2]][[2]]" returns the same information but now for the cluster of putatively colocalized traits 6-8 and "res[[2]][[3]]" for the cluster 9-10. 
+The element "res[[2]]" is a list of length 3 containing the snp scores for each of the 3 clusters of colocalized traits (presented in the same order are the clusters in "res[[1]]"), i.e "res[[2]][[1]]" is a vector of length the number of snps in the region and gives a probability that each snp is the causal variant in the region for the cluster of traits 1-5. "res[[2]][[2]]" returns the same information but now for the cluster of putatively colocalized traits 6-8 and "res[[2]][[3]]" for the cluster 9-10. For example the first few snp scores for cluster 1 (traits 1-5) are:
 
 ```{r}
 head(res[[2]][[1]]);
