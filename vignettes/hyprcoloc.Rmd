@@ -1,7 +1,7 @@
 ---
 title: "HyPrColoc"
 author: "Christopher Foley & James Staley"
-date: "9/05/2019"
+date: "14/05/2019"
 #output:
 #  pdf_document:
 #  html_notebook:
@@ -79,7 +79,7 @@ From the above output we see that, for each iteration of the algorithm, HyPrColo
 (iv) a candidate causal variant explaining the shared association 
 (v) the proportion of the posterior probability explained by this variant (which represents the HyPrColoc multi-trait fine-mapping probability). 
 
-*Note that a 'large' regional association probability is evidence that one or more snps in the region have shared associations across the traits, the result is similar to a PHeWAS (Phenome-wide association study) and we discuss this more later. The results above show that in three iterations HyPrColoc identified that traits 1-5 form a cluster of colocalized traits, traits 6-8 form a separate cluster of colocalized traits and finally that traits 9 and 10 also colocalize. We see that the cluster of traits 1-5 have a posterior probability of $1$ of being colocaized, hence the regional association probability is also $1$ and that the candidate snp rs11591147 explains 100\% of the posterior. Thus, there is very strong support that traits 1-5 colocalize and that rs11591147 be taken as the candidate causal snp in the region. On the other hand, traits 9 and 10 show strong evidence of colocalizing, having a posterior probability of $0.9$, but there is weak evidence to support rs7524677 as the causal snp in the region. This example helps to illustrate that: while a cluster of traits can show strong evidence of colocalization the snp most likely to explain colocalization between the traits can be vague.
+*Note that a 'large' regional association probability is evidence that one or more snps in the region have shared associations across the traits, the result is similar to a PheWAS (Phenome-wide association study) and we discuss this more later. The results above show that in three iterations HyPrColoc identified that traits 1-5 form a cluster of colocalized traits, traits 6-8 form a separate cluster of colocalized traits and finally that traits 9 and 10 also colocalize. We see that the cluster of traits 1-5 have a posterior probability of $1$ of being colocaized, hence the regional association probability is also $1$ and that the candidate snp rs11591147 explains 100\% of the posterior. Thus, there is very strong support that traits 1-5 colocalize and that rs11591147 be taken as the candidate causal snp in the region. On the other hand, traits 9 and 10 show strong evidence of colocalizing, having a posterior probability of $0.9$, but there is weak evidence to support rs7524677 as the causal snp in the region. This example helps to illustrate that: while a cluster of traits can show strong evidence of colocalization the snp most likely to explain colocalization between the traits can be vague.
 
 #### Labelling a trait as either continuous or binary in analyses
 
@@ -170,9 +170,9 @@ res
 ```
 
 
-## Mapping pleiotropy: a quick alternative to PHeWAS 
+## Mapping pleiotropy: an alternative to PheWAS 
 
-The regional association can be used as an alternative to a PHeWAS assessment. To see this, we first discuss how the regional association probability is computed.
+The regional association can be used as an alternative to a PheWAS assessment. To see this, we first discuss how the regional association probability is computed.
 
 For each of $Q$ snps in the region, we compute the the probability that a snp is associated with all traits and divide this by the sum of the probabilities that: (i) one of the $Q$ snps is associated with all traits; (ii) one of the snps is associated with all but one trait; (iii) one of the snps is associated with all but two traits and so on... Notably there is no restriction on the number of causal variants in the region under a regional  association assessment. A 'large' (close to 1) regional association probability indicates that one or more snps in the region share an association with all traits. This may be owing to one or more shared causal variants between the traits or because all traits have one or more causal variants and at least one causal variant per trait is in strong LD with a causal variant from each of the other traits. Small values indicate that there is not a snp in the region associated with all traits, this does not preclude the possibly that one or more snps might be associated a subset of the traits, however. The divisive clustering algorithm contains the option (bb.selection = "reg.only") to identify clusters of traits which share a regional association only, avoiding the alignment phase and therefore the colocalization assessment. Clusters of regionally associated traits are identified when the regional association probability is above a user defined threshold (default $P_{R}^{\ast}= 0.5$ which is likely to anti-conservative and should be increased). As an example, below we assess any evidence of regional associations between the traits in the sample dataset and we set the threshold regional association probability to be $0.9$:
 
