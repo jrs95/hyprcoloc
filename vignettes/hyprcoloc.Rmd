@@ -119,7 +119,11 @@ In the present example, "res[[2]]" is a list of length 3 containing the snp scor
 head(res[[2]][[1]]);
 ```
 
+<<<<<<< HEAD
 HyPrColoc has an inbuilt function to triage this information down to a "credible set" of snps for each cluster which uses the output from the "hyprcoloc" function when "snpsocres = TRUE". By default, the function identifies a credible set of snps which explains 95% of the posterior probability of colocalization for each cluster of colocalized traits. We this using the "cred.sets" function, i.e.
+=======
+HyPrColoc has an inbuilt function to triage this information down to a "credible set" of snps for each cluster using the output from the "hyprcoloc" function when "snpsocres = TRUE". The default is to identify a credible set of snps which explain 95% of the posterior probability of colocalization for each cluster of colocalized traits. This can be performed using the "cred.sets" function, i.e.
+>>>>>>> 9635369621999511b0ef89b94add405ef9f78988
 
 ```{r}
 cred.sets(res, value = 0.95);
