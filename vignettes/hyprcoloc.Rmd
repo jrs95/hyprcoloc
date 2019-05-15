@@ -269,6 +269,74 @@ which returns the full cluster of traits 6-8.
 
 This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}$ are set to be 'equal' and 'both' reflect the minimum probability with which we accept clocalization, not the product $P_{R}*P_{A}$. 
 
+
+## Analysing large numbers of traits
+
+A common question we are asked is: can HyPrColoc jointly and quickly analyse hundreds or thousands of traits? As we have seen from the previous section, assessing the stability of clusters of putatively colocalized traits is no simple task and this problem can become more difficult as the number of traits under consideration increases. The approach to assessing sensitivity of results to the choice of prior and parameters, as well as evidential strength, is the same whether we analyse 10 traits or 1000. Given this, here we focus on demonstrating the ability of HyPrColoc to identify clusters of colocalized traits from 100 then 1000 traits. We do this by replicating the test dataset of 10 traits at first 10 times: to build a dataset of 100 traits in which traits 1-50 form a cluster of colocalized traits, traits 51-80 form a second cluster of colocalized traits and finally traits 81-100 form a third cluster of colocalized traits, e.g.
+
+```{r}
+# 100 traits
+# beta100.c1 replicates the betas for cluster 1 (traits 1-5) 100 times etc...  
+traits100 <- paste0("T", 1:100)
+betas100 = ses100 = NULL;
+clusters = c(1,2,3);
+clst.traits = list(1:5, 6:8, 9:10);
+times = 10;
+  for(c in clusters){
+    tmp.betas = tmp.ses = NULL;
+    traits = clst.traits[[c]];
+        for(i in 1:times){
+            tmp.betas = cbind(tmp.betas, betas[,traits]); 
+            tmp.ses = cbind(tmp.ses, ses[,traits]);
+          }
+    betas100 = cbind(betas100, tmp.betas);
+    ses100 = cbind(ses100, tmp.ses)
+  }
+ptm = proc.time(); 
+res = hyprcoloc(betas100, ses100, trait.names = traits100, snp.id = rsid);
+proc.time()-ptm;
+
+# print the number of traits in each cluster
+clusters = which(! is.na(res$results$traits));
+for(c in clusters){
+print(length(unlist(strsplit(res$results$traits[c], split=", "))))
+}
+```
+
+There are several points to note: (i) HyPrColoc correctly identified the three clusters of colocalized traits; (ii) by borrowing strength across more (colocalized) traits, the posterior probability explained by each of the candidate snps has increased meaning we have incresed confidence that we have identified the underlying causal variant (or one in perfect LD with it) and; (iii) HyPrColoc did this in under 1 second. Let's do the same thing for 1000 traits,
+
+```{r}
+# 100 traits
+# beta100.c1 replicates the betas for cluster 1 (traits 1-5) 100 times etc...  
+traits1000 <- paste0("T", 1:1000)
+betas1000 = ses1000 = NULL;
+clusters = c(1,2,3);
+clst.traits = list(1:5, 6:8, 9:10);
+times = 100;
+  for(c in clusters){
+    tmp.betas = tmp.ses = NULL;
+    traits = clst.traits[[c]];
+        for(i in 1:times){
+            tmp.betas = cbind(tmp.betas, betas[,traits]); 
+            tmp.ses = cbind(tmp.ses, ses[,traits]);
+          }
+    betas1000 = cbind(betas1000, tmp.betas);
+    ses1000 = cbind(ses1000, tmp.ses)
+  }
+ptm = proc.time(); 
+res = hyprcoloc(betas1000, ses1000, trait.names = traits1000, snp.id = rsid);
+proc.time()-ptm;
+
+# print the number of traits in each cluster
+clusters = which(! is.na(res$results$traits));
+for(c in clusters){
+print(length(unlist(strsplit(res$results$traits[c], split=", "))))
+}
+```
+
+Again, for 1000 traits HyPrColoc correctly identified the three clusters of colocalized traits. However, notice that the posterior probability of colocalization has dropped quite a lot for clusters 2 and 3. This is a feature of assessing large numbers of traits jointly in a Bayesian framework, we discuss this nuiance in more detail in the HyPrColoc text. A final point of note is that, the posterior probability explained by the candidate snps in clusters 2 and 3 is maximized. That is, we known from assessing the credible sets of snps in both clusters that in cluster 2 the candidate snp is in perfect LD with one other snp and in cluster 3 the candidate snp is in perfoect LD with four other snps. Hence, the maximum evidential support for these two snps being the causal snps in each cluster can only be 50\% and 20\% respectively, which is what we identify.
+
+
 ## Analysing correlated traits
 
 When interest lies in identifying colocalization across a set of traits whose summary data are correlated (due to overlapping participants) three additional pieces of information are required: (i) a matrix containing the putative correlation between the traits; (ii) a matrix containing the LD between the snps in the region and; (iii) a matrix containing the proportion of shared participants between each pair of studies. Note the matrix of overlapping sample proportions has diagonal elements set to 1 and off diagonal elements $(i,j)$ denote the proportion of overlap between the $i$'th and $j$'th studies, i.e. if N denotes the total number of overlapping participants and $\{N_{i},N_{j}\}$ denote the numbers of participants in the $i$'th and $j$'th studies respectively, then $N/\left(N_{i}N_{j}\right)$ is the  $(i,j)=(j,i)$ element. As sample overlap information may not always be available, HyPrColoc defaults to assumes all studies have the same participants.   
