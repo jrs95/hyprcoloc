@@ -185,7 +185,7 @@ res
 
 The results indicate that there exists one or more snps that share associations with traits 1-5, a result anticipated from the results of our previous colocalization analysis. However, by avoiding a colocalization assessment we identify that traits 6-10 all appear to have a shared association with at least one snp, the most likely shared snp is rs12117612 which explains 31.4% of the regional association probability. This contrasts with the results from our earlier colocalization assessment which indicated that traits 6-10 do not all colocalize and highlights some distinction between traits which have a shared genetic associations (PHeWAS) and those which colocalize at a single causal variant.
 
-As a final point of note, the regional association statistic is computed from a much smaller number of causal configurations than a full colocalization assessment. This means that when we employ the Bayesian divisive clustering algorithm using only the regional statistic we can rapidly identify clusters of traits which shared genetic associations.  It is therefore quick to   
+As a final point of note, the regional association statistic is computed from a much smaller number of causal configurations than a full colocalization assessment. The upshot is that the Bayesian divisive clustering algorithm, using only the regional statistic, can rapidly identify clusters of traits which shared genetic associations amongst very large numbers of traits. As an example, try employing a regional only assessment to the dataset of 1000 traits that we build later in the vignette.
 
 
 ## An analysis protocol: assessing stability of clusters via a sensitivity analysis 
