@@ -10,9 +10,9 @@ date: "`r Sys.Date()`"
 #  html_document:
 #    df_print: paged
 #    toc: yes
-output: rmarkdown::html_vignette
-#    toc: yes
-#    toc_depth: 3
+output: rmarkdown::html_vignette:
+    toc: yes
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{hyprcoloc}
   %\VignetteEngine{knitr::rmarkdown}
