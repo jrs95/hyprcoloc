@@ -11,8 +11,8 @@ date: "14/05/2019"
 #    df_print: paged
 #    toc: yes
 output: rmarkdown::html_vignette
-#    toc: yes
-#    toc_depth: 3
+    toc: yes
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{hyprcoloc}
   %\VignetteEngine{knitr::rmarkdown}
