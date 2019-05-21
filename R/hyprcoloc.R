@@ -840,6 +840,7 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
+  if(any(effect.se==0)) stop("there are zero values in effect.se")
   if(any(is.na(binary.outcomes))) stop("there are missing values in binary.outcomes")
   if(any(!(binary.outcomes %in% c(0,1)))) stop("there are missing values in binary.outcomes")
   if(any(is.na(trait.subset))) stop("there are missing values in trait.subset")
