@@ -10,7 +10,7 @@ License: GPL (>= 2)
 ByteCompile: TRUE
 LazyData: TRUE
 Encoding: UTF-8
-Imports: iterpc, Rcpp, RcppEigen, Rmpfr, compiler, Matrix, knitr, rmarkdown
+Imports: iterpc, Rcpp, RcppEigen, Rmpfr, compiler, Matrix, knitr, rmarkdown, pheatmap
 LinkingTo: Rcpp, RcppEigen
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
