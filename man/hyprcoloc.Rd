@@ -85,5 +85,5 @@ rsid <- rownames(betas)
 results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
 }
 \author{
-Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
+Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <jrstaley95@gmail.com>
 }

@@ -421,5 +421,11 @@ time.corr;
 
 Thus, assuming independence between the studies not only correctly identifies the three clusters of colocalized traits, but does so around 3500 times faster than accounting for non-indepdence. 
 
+<<<<<<< HEAD
+=======
+##### Performing a sensitivity analysis: changing the evidential strength of colocalization - through the regional and alignment thresholds - as well as the prior probability of coloclization (i.e. "prior.2") 
+
+As part of your colocalization analyses, you should consider assessing how sensitive the clusters of colocalized traits are to the choice of: (i) the algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. HyPrColoc allows you to do this through a single function "sensitivity.plot", by varying the choice of regional and alignment thresholds as well as the colocalization prior ("prior.2") across a range of values. We start with the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected).   
+>>>>>>> 4d5ac0f67f613581907948c7beefa44b198619e4
 
 
