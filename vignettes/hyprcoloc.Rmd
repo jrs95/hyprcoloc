@@ -32,6 +32,9 @@ library(devtools)
 install_github("jrs95/hyprcoloc")
 ```
 
+<< Getting started: inputting data to a performing a multi-trait colocalization assessment
+==
+
 ##Getting started
 
 In the first part of this exercise we begin by loading the package and some data needed to run analyses using HyPrColoc. For a given region, a standard analysis requires data from two matrices, of equal size, denoting: (i) a matrix of effect estimates (betas), with the columns denoting the study traits and rows the snps, and; (ii) a matrix of corresponding standard errors (ses).
@@ -180,6 +183,8 @@ The results indicate that there exists one or more snps that share associations 
 
 As a final point of note, the regional association statistic is computed from a much smaller number of causal configurations than a full colocalization assessment. The upshot is that the Bayesian divisive clustering algorithm, using only the regional statistic, can rapidly identify clusters of traits which shared genetic associations amongst very large numbers of traits. As an example, try employing a regional only assessment to the dataset of 1000 traits that we build later in the vignette.
 
+<< Analysis protocol: Overview and detailed discussion
+==
 
 ##An analysis protocol: assessing stability of clusters via a sensitivity analysis 
 
@@ -266,13 +271,17 @@ which returns the full cluster of traits 6-8.
 
 This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}$ are set to be 'equal' and 'both' reflect the minimum probability with which we accept clocalization, not the product $P_{R}*P_{A}$. 
 
+
+<<< Analysis protocol: A one stop HyPrColoc sensitivity analysis
+===
+
 ##### A one stop sensitivity assessment: changing the evidential strength of colocalization - through the regional and alignment thresholds - as well as the prior probability of coloclization (i.e. "prior.2") 
 
 As discussed above, results from a colocalization analyses might be sensitive to the choice of: (i) algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. It is therefore essential that we explore any sensitivity, particularly if we are aiming to identify reliable candidate clusters of colocalized traits. HyPrColoc allows you to do this through a single function "sensitivity.plot". The function repeatedly calls "hyprcoloc" for various user defined choices of the regional and alignment thresholds as well as the colocalization prior ("prior.2"). The default values for these parameters start from the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected). For example
 
 ```{r}
 sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
-                 reg.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE);
+                 reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE);
 # Or by fixing the regional and aligment thresholds to be equal
 # sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
 #                  reg.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = TRUE);
@@ -421,11 +430,6 @@ time.corr;
 
 Thus, assuming independence between the studies not only correctly identifies the three clusters of colocalized traits, but does so around 3500 times faster than accounting for non-indepdence. 
 
-<<<<<<< HEAD
-=======
-##### Performing a sensitivity analysis: changing the evidential strength of colocalization - through the regional and alignment thresholds - as well as the prior probability of coloclization (i.e. "prior.2") 
-
-As part of your colocalization analyses, you should consider assessing how sensitive the clusters of colocalized traits are to the choice of: (i) the algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. HyPrColoc allows you to do this through a single function "sensitivity.plot", by varying the choice of regional and alignment thresholds as well as the colocalization prior ("prior.2") across a range of values. We start with the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected).   
 >>>>>>> 4d5ac0f67f613581907948c7beefa44b198619e4
 
 
