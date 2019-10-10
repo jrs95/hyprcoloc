@@ -32,7 +32,7 @@ library(devtools)
 install_github("jrs95/hyprcoloc")
 ```
 
-<< Getting started: inputting data to a performing a multi-trait colocalization assessment
+<< Getting started
 ==
 
 ##Getting started
@@ -131,6 +131,9 @@ Together these two variants explain nearly 90% of the posterior probability of c
 
 *One natural question to ask is: if the two snps are in perfect LD why have we deduced that the traits colocalize? The result is a consequence of our choice of the prior probability of colocalization. The number of causal configurations which reflect colocalization between the traits is much (much!) smaller than configurations which do not represent colocalization between the traits. This means that if we were to set all prior configuration probabilities to be equal we would almost certainly never identify colocalization between the traits, even if the shared associations between traits were truly owing to a colocalization mechanism. Thus, a colocalization causal confiugration prior must be larger than a non-colocalization causal configuration prior for general (discovery) analyses. But how much larger? There is no simple answer to this. It is complicated and we therefore dedicate more time to discuss this issue later.    
 
+<< The Bayesian divisive clustering algorithm
+==
+
 ###The Bayesian divisive clustering algorithm
 
 The Bayesian divisive clustering algorithm identifies clusters of colocalized traits in the sample. The algorithm is automatically used when all traits are identified as not sharing a causal variant. For each iteration of the algorithm, the goal is to identify a subset of traits with the greatest evidence of colocalization. HyPrColoc does this using one of two (user defined) approaches: (i) the regional or (ii) alignment selection. The regional selection criterion is computed from a collection of hypotheses which assume that all traits do not colocalize because one of the traits does not have a causal variant in the region. The alignment selection criterion, however, is computed from hypotheses which assume that all traits do not colocalize because one of the traits has a causal variant elsewhere in the region. The alignment selection process searches a much larger amount of the causal configuration space and is thus more computationally expensive (but potentially more robust) than regional selection. Typically, both strategies perform similarly and we therefore chose the regional selection as the default setting. 
@@ -164,6 +167,8 @@ res <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid, bb.alg = FALSE);
 res
 ```
 
+<< Mapping pleiotropy: an alternative to PheWAS
+==
 
 ##Mapping pleiotropy: an alternative to PheWAS 
 
