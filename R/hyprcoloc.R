@@ -269,7 +269,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
     color             = colorRampPalette((brewer.pal(n = 9, name = "Reds")))(100),
     border_color      = NA,
     show_colnames     = TRUE,
-    show_rownames     = FALSE,
+    show_rownames     = TRUE,
     #annotation_col    = annotation_row,
     drop_levels       = TRUE,
     fontsize          = 6,

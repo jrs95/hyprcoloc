@@ -185,7 +185,7 @@ As a final point of note, the regional association statistic is computed from a 
 
 It is important that users of the software ackowledge that the performance of HyPrColoc is particularly dependendant on the choice of prior configuration probabilities used (and any associated hyper-parameters) as well as the choice of regional and alignment thresholds, as these combine to quantify a lower bound with which we accept that a cluster of traits colocalize (i.e. clusters are identified when $P_RP_{A}\geq P^{\ast}_{R}P^{\ast}_{A}$). In some situations this senstivity might be modest, whilst in others it might be large. For example, through extensive simulations, we note that in the analysis of large numbers of traits, using only the default algorithm settings, can regularly result in the trait clusters containing (typically only a single) false positive. Avoiding this issue is complex as it is unlikely that there exists a one-size-fits-all approach to setting the prior configuration probabilities and likewise the regional and alignment threshold parameters. Hence, to go someway to addressing these issues we provide an analysis protocol template, to assess the strength of any conclusions. 
 
-The full protocol template is at the end of this section.
+At the end of this section we introduce a function "sensitivity.plot" which, on varying the input values for the regional and alignment thresholds as well as the prior probability of colocalization, returns a heat-map that helps us to visuale how stable the clusters of colocalized traits are to variations in the algorithms input parameters. We expect this function to be a part of standard analyses, helping us to pinpoint the best candidate clusters of colocalized traits for follow-up analyses.    
 
 ###Assessing sensitivity to changes in the prior configuration parameters 
 
@@ -266,6 +266,19 @@ which returns the full cluster of traits 6-8.
 
 This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}$ are set to be 'equal' and 'both' reflect the minimum probability with which we accept clocalization, not the product $P_{R}*P_{A}$. 
 
+##### A one stop sensitivity assessment: changing the evidential strength of colocalization - through the regional and alignment thresholds - as well as the prior probability of coloclization (i.e. "prior.2") 
+
+As discussed above, results from a colocalization analyses might be sensitive to the choice of: (i) algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. It is therefore essential that we explore any sensitivity, particularly if we are aiming to identify reliable candidate clusters of colocalized traits. HyPrColoc allows you to do this through a single function "sensitivity.plot". The function repeatedly calls "hyprcoloc" for various user defined choices of the regional and alignment thresholds as well as the colocalization prior ("prior.2"). The default values for these parameters start from the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected). For example
+
+```{r}
+sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
+                 reg.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE);
+# Or by fixing the regional and aligment thresholds to be equal
+# sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
+#                  reg.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = TRUE);
+```
+
+The output is a heat-map which helps us to visualise the clusters of colocalised traits. Traits which cluster across all values considered are given a score of 1 and traits which never cluster are given a score of 0; traits which ocassionally cluster have a score between 0 and 1. Hence, our confidence in a cluster increases with increasing score - appearing as a darker block of clustered traits in the heat-map. The heat-map reflects what we have already seen from our individual analyses: traits 1-5 for a very strong cluster of colocalized traits; traits 6-8 form a second cluster, however for certain values of the input parameters trait 6 is dropped from this cluster and; traits 9-10 form a thrid cluster, however identification of this cluster is difficult for more stringent values of the thresholds and the prior probability of colocalization. It is clear from our figure that there are three distinct clusters of colocalized traits in our sample, matching the true data generating mechanism. However, our most confident clusters of colocalised traits are traits 1-5 and separately traits 7-8. Although we have set the benchmark quite high, the two clusters 6-8 and 9-10 are present in around 80\% of the scenarios considered making them reasonable candidates also. 
 
 ##Analysing large numbers of traits
 
@@ -408,12 +421,5 @@ time.corr;
 
 Thus, assuming independence between the studies not only correctly identifies the three clusters of colocalized traits, but does so around 3500 times faster than accounting for non-indepdence. 
 
-##### Performing a sensitivity analysis: changing the evidential strength of colocalization - through the regional and alignment thresholds - as well as the prior probability of coloclization (i.e. "prior.2") 
 
-As part of your colocalization analyses, you should consider assessing how sensitive the clusters of coloclized traits are to the choice of: (i) the algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. HyPrColoc allows you to do this through a single function "sensitivity.plot", by varying the choice of regional and alignment thresholds as well as the colocalization prior ("prior.2") across a range of values. We start with the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected).   
-
-```{r}
-sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
-                 reg.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = TRUE);
-```
 
