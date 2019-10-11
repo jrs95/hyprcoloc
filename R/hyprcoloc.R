@@ -226,7 +226,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
               for(its in 1:length(trt.clusts)){
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
                 if(tmp.clust[1]!="None"){
-                  tmp.vec = which(traits %in% tmp.clust);
+                  tmp.vec = which(trait.names %in% tmp.clust);
                   coloc.pairs = t(snp.combin(m, 2, tmp.vec));
                   tmp.mat[t(coloc.pairs)] = 1;
                 }
