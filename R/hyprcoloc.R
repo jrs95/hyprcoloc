@@ -207,7 +207,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
                             trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]),
                             bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9),
                             prior.1 = 1e-4, prior.2 = c(0.98, 0.99, 0.995), uniform.priors = FALSE,
-                            ind.traits = TRUE, equal.thresholds = FALSE){
+                            ind.traits = TRUE, equal.thresholds = FALSE, similarity.matrix = FALSE){
   
   m = dim(effect.est)[2];                            
   snp.combin = function(x, y, vec){I = iterpc(x, y, labels = vec);return(getall(I)+0.0)};
@@ -263,10 +263,11 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
   #                                  Clusters = factor(dta$cluster.class[match(rownames(smat), obs.names)])
   #                                )
   #                                rownames(annotation_row) <- rownames(smat)
-  
+  breaksList = seq(0,1,by=0.02);
   plot = pheatmap(
     mat               = sim.mat,
-    color             = colorRampPalette((brewer.pal(n = 9, name = "Reds")))(100),
+    color             = colorRampPalette((brewer.pal(n = 9, name = "OrRd")))(length(breaksList)),
+    breaks = breaksList,
     border_color      = NA,
     show_colnames     = TRUE,
     show_rownames     = TRUE,
@@ -276,7 +277,10 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
     main              = "Default Heatmap"
   )
   
-  return(plot)        
+  if(!similarity.matrix){
+    return(plot)}else{
+      return(list(plot, sim.mat))
+    }        
   
 }
 
