@@ -219,9 +219,10 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
           if(equal.thresholds){
               j = i;
               tmp.mat = diag(1,m);                                     
-              res = hyprcoloc(effect.est, effect.se, binary.outcomes, trait.subset, trait.names,
-                              snp.id, ld.matrix, trait.cor, sample.overlap, bb.alg, bb.selection, reg.steps = 1, reg.thresh = i, align.thresh = j,
-                              prior.1, prior.2 = k, uniform.priors, ind.traits);
+              res = hyprcoloc(effect.est, effect.se, binary.outcomes = binary.outcomes, trait.subset = trait.subset, trait.names = trait.names,
+                              snp.id = snp.id, ld.matrix = ld.matrix, trait.cor = trait.cor, sample.overlap = sample.overlap, bb.alg = bb.alg, bb.selection = bb.selection,
+                              reg.steps = reg.steps, reg.thresh = i, align.thresh = j,
+                              prior.1 = prior.1, prior.2 = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
               trt.clusts = res[[1]]$traits;
               for(its in 1:length(trt.clusts)){
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
@@ -235,9 +236,10 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
           }else{
               for(j in align.thresh){
               tmp.mat = diag(1,m);                                     
-              res = hyprcoloc(effect.est, effect.se, binary.outcomes, trait.subset, trait.names,
-                              snp.id, ld.matrix, trait.cor, sample.overlap, bb.alg, bb.selection, reg.steps = 1, reg.thresh = i, align.thresh = j,
-                              prior.1, prior.2 = k, uniform.priors, ind.traits);
+              res = hyprcoloc(effect.est, effect.se, binary.outcomes = binary.outcomes, trait.subset = trait.subset, trait.names = trait.names,
+                              snp.id = snp.id, ld.matrix = ld.matrix, trait.cor = trait.cor, sample.overlap = sample.overlap, bb.alg = bb.alg, bb.selection = bb.selection,
+                              reg.steps = reg.steps, reg.thresh = i, align.thresh = j,
+                              prior.1 = prior.1, prior.2 = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
               trt.clusts = res[[1]]$traits;
               for(its in 1:length(trt.clusts)){
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
