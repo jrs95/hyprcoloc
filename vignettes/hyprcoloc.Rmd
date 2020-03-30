@@ -228,7 +228,7 @@ This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}
 
 As discussed above, results from a colocalization analyses might be sensitive to the choice of: (i) algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. It is therefore essential that we explore any sensitivity, particularly if we are aiming to identify reliable candidate clusters of colocalized traits. HyPrColoc allows you to do this through a single function "sensitivity.plot". The function repeatedly calls "hyprcoloc" for various user defined choices of the regional and alignment thresholds as well as the colocalization prior ("prior.2"). The default values for these parameters start from the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected). For example
 
-```{r}
+```{r, eval=F}
 sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
                  reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE);
 # Or by fixing the regional and aligment thresholds to be equal
