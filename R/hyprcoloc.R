@@ -224,7 +224,8 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
                 if(tmp.clust[1]!="None"){
                   tmp.vec = which(trait.names %in% tmp.clust);
-                  coloc.pairs = t(snp.combin(m, 2, tmp.vec));
+                  # coloc.pairs = t(snp.combin(m, 2, tmp.vec));
+                  coloc.pairs = t(snp.combin(length(tmp.vec), 2, tmp.vec));
                   tmp.mat[t(coloc.pairs)] = 1;
                 }
               }
@@ -241,7 +242,8 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
                 if(tmp.clust[1]!="None"){
                   tmp.vec = which(trait.names %in% tmp.clust);
-                  coloc.pairs = t(snp.combin(m, 2, tmp.vec));
+                  # coloc.pairs = t(snp.combin(m, 2, tmp.vec));
+                  coloc.pairs = t(snp.combin(length(tmp.vec), 2, tmp.vec));
                   tmp.mat[t(coloc.pairs)] = 1;
                 }
               }
