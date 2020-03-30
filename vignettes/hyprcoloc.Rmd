@@ -228,7 +228,7 @@ This results explains why the default values for $P_R^{\ast}$  and $P_{A}^{\ast}
 
 As discussed above, results from a colocalization analyses might be sensitive to the choice of: (i) algorithm thresholds, i.e. colocalization cut-off $=P^{\ast}_{R}*P^{\ast}_{A}$, and; (ii) the prior belief about traits sharing a causal variant. It is therefore essential that we explore any sensitivity, particularly if we are aiming to identify reliable candidate clusters of colocalized traits. HyPrColoc allows you to do this through a single function "sensitivity.plot". The function repeatedly calls "hyprcoloc" for various user defined choices of the regional and alignment thresholds as well as the colocalization prior ("prior.2"). The default values for these parameters start from the algorithms default settings and then increase these so that identification of clusters of colocalized traits becomes more challenging (i.e. traits must have stronger evidence of colocalization in order to be detected). For example
 
-```{r, eval=F}
+```{r}
 sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
                  reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE);
 # Or by fixing the regional and aligment thresholds to be equal
@@ -238,7 +238,7 @@ sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid,
 
 The output is a heat-map which helps us to visualise the clusters of colocalised traits. Traits which cluster across all values considered are given a score of 1 and traits which never cluster are given a score of 0; traits which ocassionally cluster have a score between 0 and 1. Hence, our confidence in a cluster increases with increasing score - appearing as a darker block of clustered traits in the heat-map. The heat-map reflects what we have already seen from our individual analyses: traits 1-5 form a very strong cluster of colocalized traits; traits 6-8 form a second cluster, however for certain values of the input parameters trait 6 is dropped from this cluster and; traits 9-10 form a thrid cluster, however identification of this cluster is difficult for more stringent values of the thresholds and the prior probability of colocalization. It is clear from our figure that there are three distinct clusters of colocalized traits in our sample, matching the true data generating mechanism. However, our most confident clusters of colocalised traits are traits 1-5 and separately traits 7-8. Although we have set the benchmark quite high, the two clusters 6-8 and 9-10 are present in around 70\% of the (sensitivity) scenarios considered making them reasonable candidates also. To see this we can require that "sensitivity.plot" returns the similarity matrix used to plot the heat-map:
 
-```{r, eval=F}
+```{r}
 res = sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid, 
                  reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9), prior.2 = c(0.98, 0.99, 0.995), equal.thresholds = FALSE, similarity.matrix = TRUE);
 # heatmap is found by typing 
