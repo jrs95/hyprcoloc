@@ -15,15 +15,6 @@ HyPrColoc is an efficient deterministic Bayesian divisive clustering algorithm u
 4. library(hyprcoloc)
 5. browseVignettes("hyprcoloc")
 
-## If issue with installation (owing to c++ compiler)
-Try replacing 3 above with previous package version:
-
-3. install_github("jrs95/hyprcoloc", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
-
-\# Note there is no "prior.c" parameter in this version, instead use "prior.2 = 1 - prior.c". Default settings are matched.
-
-Otherwise, on a Windows machine try updating Rtools: remove the previous version of Rtools (probably located C:\Rtools) and download Rtools40 from CRAN [https://cran.r-project.org/bin/windows/Rtools/]
-
 ## Example
 \# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)  
 betas <- hyprcoloc::test.betas  
