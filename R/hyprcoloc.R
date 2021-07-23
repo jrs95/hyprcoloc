@@ -32,7 +32,7 @@ p.0 <- function(j, Q){
 #' ind.snp.score
 #'
 #' @param Q the number of traits 
-#' @param snp.scores
+#' @param snp.scores vector of per snp contributions to the posterior probability of colocalization
 #' @export
 ind.snp.score <- function(Q, snp.scores){
   loc = vector("numeric", Q-1);
@@ -165,60 +165,63 @@ cred.sets = function(res, value = 0.95){
 
 
 ###########################################################################################################################################
-##### Perform a sensitivity analysis by varying the algorithm (regional and alignment) thresholds and coloclaization prior (prior.2)  #####
+##### Perform a sensitivity analysis by varying the algorithm (regional and alignment) thresholds and coloclaization prior (prior.c)  #####
 ###########################################################################################################################################
 
 #' sensitivity.plot
 #'
 #' sensitivity.plot is a function which repeatedly calls the hyprcoloc function to compute a similarity matrix which illustrates how strongly clustered/colocalized pairs of traits are across different input thresholds and priors     
-#' @param effect.est matrix of beta values
-#' @param effect.se matrix of se values
-#' @param binary.outcomes a binary vector depicting binary traits
-#' @param trait.subset vector of traits from the full trait list for trageted coloclaisation analysis
+#' @param effect.est matrix of snp regression coefficients (i.e. regression beta values) in the genomic region 
+#' @param effect.se matrix of standard errors associated with the beta values
+#' @param binary.outcomes a binary vector of dimension the number of traits: 1 represents a binary trait 0 otherwise
+#' @param trait.subset vector of trait names (or number) from the full trait list: used for trageted colocalization analysis in a region
 #' @param trait.names vector of trait names corresponding to the columns in the effect.est matrix
 #' @param snp.id vector of SNP IDs
 #' @param ld.matrix LD matrix
-#' @param trait.cor correlation matrix between traits
-#' @param sample.overlap matrix of sample overlap between traits
-#' @param n.cvs number of causal variants
-#' @param bb.alg branch and bound algorithm
-#' @param bb.selection branch and bound algorithm type
+#' @param trait.cor matrix of pairwise correlations between traits
+#' @param sample.overlap matrix of pairwise sample overlap between traits
+#' @param bb.alg branch and bound algorithm: TRUE, employ BB algorithm; FALSE, do not
+#' @param bb.selection branch and bound algorithm type, e.g. regional or alignment selection
 #' @param reg.steps regional step paramter
-#' @param window.size size of window for 2CV testing
-#' @param sentinel sentinel variant
-#' @param epsilon tolerance parameter
-#' @param reg.thres a vector of regional probability thresholds
+#' @param reg.thresh a vector of regional probability thresholds
 #' @param align.thresh a vector of alignment probability thresholds
-#' @param reg.tol regional tolerance parameter
 #' @param prior.1 prior probability of a SNP being associated with one trait
-#' @param prior.2 a vector of prior probabilities where: 1 - prior is the probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param prior.3 prior probability that a trait contains a second causal variant given it contains one already
-#' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
-#' @param unifrom.priors uniform priors
+#' @param prior.c vector of conditional colocalization priors: where prior.c is the probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
+#' @param prior.12 COLOC prior p12: prior probability of a SNP being associated with any two traits
+#' @param uniform.priors uniform priors
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @param equal.thresholds fix the regional and alignment thresholds to be equal
+#' @param similarity.matrix To be viewed as a similarity matrix. Default FALSE.
+#' @import pheatmap RColorBrewer
+#' @export
 sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), 
                             trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]),
                             snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
-                            trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]),
-                            bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9),
-                            prior.1 = 1e-4, prior.2 = c(0.98, 0.99, 0.995), uniform.priors = FALSE,
+                            trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), 
+                            sample.overlap = matrix(rep(1,dim(effect.est)[2]^2), nrow = dim(effect.est)[2]),
+                            bb.alg = TRUE, bb.selection = "regional", 
+                            reg.steps = 1, reg.thresh = c(0.6,0.7,0.8,0.9), align.thresh = c(0.6,0.7,0.8,0.9),
+                            prior.1 = 1e-4, prior.c = c(0.02, 0.01, 0.005), prior.12 = NULL,
+                            uniform.priors = FALSE,
                             ind.traits = TRUE, equal.thresholds = FALSE, similarity.matrix = FALSE){
   
   m = dim(effect.est)[2];                            
   snp.combin = function(x, y, vec){I = iterpc(x, y, labels = vec);return(getall(I)+0.0)};
   sim.mat = diag(0,m);
   
+  if(!is.null(prior.12)){
+    prior.c = prior.12/(prior.1 + prior.12);
+  }
   
   for(i in reg.thresh){
-      for(k in prior.2){
+      for(k in prior.c){
           if(equal.thresholds){
               j = i;
               tmp.mat = diag(1,m);                                     
               res = hyprcoloc(effect.est, effect.se, binary.outcomes = binary.outcomes, trait.subset = trait.subset, trait.names = trait.names,
                               snp.id = snp.id, ld.matrix = ld.matrix, trait.cor = trait.cor, sample.overlap = sample.overlap, bb.alg = bb.alg, bb.selection = bb.selection,
                               reg.steps = reg.steps, reg.thresh = i, align.thresh = j,
-                              prior.1 = prior.1, prior.2 = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
+                              prior.1 = prior.1, prior.c = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
               trt.clusts = res[[1]]$traits;
               for(its in 1:length(trt.clusts)){
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
@@ -236,7 +239,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
               res = hyprcoloc(effect.est, effect.se, binary.outcomes = binary.outcomes, trait.subset = trait.subset, trait.names = trait.names,
                               snp.id = snp.id, ld.matrix = ld.matrix, trait.cor = trait.cor, sample.overlap = sample.overlap, bb.alg = bb.alg, bb.selection = bb.selection,
                               reg.steps = reg.steps, reg.thresh = i, align.thresh = j,
-                              prior.1 = prior.1, prior.2 = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
+                              prior.1 = prior.1, prior.c = k, uniform.priors = uniform.priors, ind.traits = ind.traits);
               trt.clusts = res[[1]]$traits;
               for(its in 1:length(trt.clusts)){
                 tmp.clust = unlist(strsplit(trt.clusts[its], split=", "));
@@ -252,7 +255,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
         }
     }
   }
-  sim.mat = sim.mat/length(reg.thresh)/length(align.thresh)/length(prior.2);
+  sim.mat = sim.mat/length(reg.thresh)/length(align.thresh)/length(prior.c);
   if(equal.thresholds){
   sim.mat = sim.mat*length(align.thresh);
   }
@@ -266,15 +269,17 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
   breaksList = seq(0,1,by=0.02);
   plot = pheatmap(
     mat               = sim.mat,
-    color             = colorRampPalette((brewer.pal(n = 9, name = "OrRd")))(length(breaksList)),
+    color             = colorRampPalette((brewer.pal(n = 9, name = "Blues")))(length(breaksList)),
     breaks = breaksList,
+    cluster_cols = FALSE,
+    cluster_rows = FALSE,
     border_color      = NA,
     show_colnames     = TRUE,
     show_rownames     = TRUE,
     #annotation_col    = annotation_row,
     drop_levels       = TRUE,
     fontsize          = 6,
-    main              = "Default Heatmap"
+    main              = "Prior sensitivity heatmap"
   )
   
   if(!similarity.matrix){
@@ -296,7 +301,7 @@ sensitivity.plot = function(effect.est, effect.se, binary.outcomes = rep(0, dim(
 #' @param Wsq ratio matrix of prior standard deviation and observed standard errors squared
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param unifrom.priors uniform priors
+#' @param uniform.priors uniform priors
 #' @export
 rapid.reg <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
@@ -354,7 +359,7 @@ rapid.reg <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' @param test.2 test for 2CV
 #' @param reg.steps regional step paramter
 #' @param cor.adj.priors correlation adjusted priors
-#' @param unifrom.priors uniform priors
+#' @param uniform.priors uniform priors
 #' @param branch.jump branch jump
 #' @param Zsq matrix of Z-scores squared
 #' @param Wsq matrix of W squared
@@ -534,7 +539,7 @@ regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon
 #' @param Wsq ratio matrix of prior standard deviation and observed standard errors squared
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param unifrom.priors uniform priors
+#' @param uniform.priors uniform priors
 #' @export
 rapid.align <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
@@ -705,7 +710,7 @@ align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix,  epsilon, re
 #' @param prior.3 prior probability that a trait contains a second causal variant given it contains one already
 #' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
 #' @param cor.adj.priors correlation adjusted priors
-#' @param unifrom.priors uniform priors
+#' @param uniform.priors uniform priors
 #' @export
 align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, epsilon, reg.res, align.thresh, prior.1, prior.2, prior.3, prior.4, cor.adj.priors, uniform.priors){
   
@@ -848,7 +853,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
 #' @param Wsq ratio matrix of prior standard deviation and observed standard errors squared
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param unifrom.priors uniform priors
+#' @param uniform.priors uniform priors
 #' @export
 rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
   
@@ -905,46 +910,39 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 
 #' HyPrColoc
 #'
-#' hyprcoloc is a function which allows the user to perform multi-trait colocalisation analyses in genomic regions
-#' @param effect.est matrix of beta values
-#' @param effect.se matrix of se values
-#' @param binary.outcomes a binary vector depicting binary traits
-#' @param trait.subset vector of traits from the full trait list for trageted coloclaisation analysis
+#' hyprcoloc is a function used to identify clusters of colocalized traits and candidate causal SNPs in genomic regions
+#' @param effect.est matrix of snp regression coefficients (i.e. regression beta values) in the genomic region 
+#' @param effect.se matrix of standard errors associated with the beta values
+#' @param binary.outcomes a binary vector of dimension the number of traits: 1 represents a binary trait 0 otherwise
+#' @param trait.subset vector of trait names (or number) from the full trait list: used for trageted colocalization analysis in a region
 #' @param trait.names vector of trait names corresponding to the columns in the effect.est matrix
 #' @param snp.id vector of SNP IDs
 #' @param ld.matrix LD matrix
-#' @param trait.cor correlation matrix between traits
-#' @param sample.overlap matrix of sample overlap between traits
-#' @param n.cvs number of causal variants
-#' @param bb.alg branch and bound algorithm
-#' @param bb.selection branch and bound algorithm type
+#' @param trait.cor matrix of pairwise correlations between traits
+#' @param sample.overlap matrix of pairwise sample overlap between traits
+#' @param bb.alg branch and bound algorithm: TRUE, employ BB algorithm; FALSE, do not
+#' @param bb.selection branch and bound algorithm type, e.g. regional or alignment selection
 #' @param reg.steps regional step paramter
-#' @param window.size size of window for 2CV testing
-#' @param sentinel sentinel variant
-#' @param epsilon tolerance parameter
-#' @param reg.thres regional probability threshold
-#' @param align.thresh alignment probability threshold
-#' @param reg.tol regional tolerance parameter
+#' @param reg.thresh threshold probability beyond which traits are believed to share a regional association signal 
+#' @param align.thresh threshold probability beyond which traits are believed to align at a single causal variant
 #' @param prior.1 prior probability of a SNP being associated with one trait
-#' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
-#' @param prior.3 prior probability that a trait contains a second causal variant given it contains one already
-#' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
+#' @param prior.c conditional colocalization prior: probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
+#' @param prior.12 COLOC prior p12: prior probability of a SNP being associated with any two traits
 #' @param sensitivity perform senstivity analysis
-#' @param sens.1 first sensitivity analysis
-#' @param sens.2 second sensitivity analysis
-#' @param cor.adj.priors correlation adjusted priors
-#' @param unifrom.priors uniform priors
-#' @param branch.jump branch jump
+#' @param sense.1 first sensitivity analysis
+#' @param sense.2 second sensitivity analysis
+#' @param uniform.priors uniform priors
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @param snpscores output estimated posterior probability explained each SNP
-#' @return results a data.frame of HyPrColoc results
-#' @return snpscores a list of estimated posterior probabilities explained by the SNPs; for the BB algorithm there is a set of SNP probabilities for each iteration
+#' @return A data.frame of HyPrColoc results: each row is a cluster of colocalized traits or is coded NA (if no colocalization is identified)
+#' @return If snpscores=TRUE: additionally returns a list of posterior probability explained by each SNPs and for each cluster of colocalized traits identified
 #' @import compiler Rmpfr iterpc Matrix
 #' @importFrom Rcpp evalCpp
 #' @useDynLib hyprcoloc
-#' @author Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
+#' @author Christopher N Foley <chris.neal.foley@gmail.com> and James R Staley <jrstaley95@gmail.com>
 #' @examples
-#' # Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)
+#' # Regression coefficients and standard errors from ten GWAS studies
+#' # (Traits 1-5, 6-8 & 9-10 are the clusters of colocalized traits)
 #' betas <- hyprcoloc::test.betas
 #' head(betas)
 #' ses <- hyprcoloc::test.ses
@@ -956,7 +954,17 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors){
 #' 
 #' # Colocalisation analyses
 #' results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
-hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]) , trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]), bb.alg = TRUE, bb.selection = "regional", reg.steps = 1, reg.thresh = "default", align.thresh = "default", prior.1 = 1e-4, prior.2 = 0.98, sensitivity = FALSE, sense.1 = 1, sense.2 = 2, uniform.priors = FALSE, ind.traits = FALSE, snpscores=FALSE){
+#' @export
+hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]), 
+                      trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]), 
+                      snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
+                      trait.cor = diag(1, dim(effect.est)[2], dim(effect.est)[2]), 
+                      sample.overlap = matrix(rep(1,dim(effect.est)[2]^2) , nrow = dim(effect.est)[2]), 
+                      bb.alg = TRUE, bb.selection = "regional", 
+                      reg.steps = 1, reg.thresh = "default", align.thresh = "default", 
+                      prior.1 = 1e-4, prior.c = 0.02, prior.12 = NULL, 
+                      sensitivity = FALSE, sense.1 = 1, sense.2 = 2, 
+                      uniform.priors = FALSE, ind.traits = FALSE, snpscores=FALSE){
 
   if(any(is.na(effect.est))) stop("there are missing values in effect.est")
   if(any(is.na(effect.se))) stop("there are missing values in effect.se")
@@ -969,7 +977,11 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
   if(any(is.na(ld.matrix))) stop("there are missing values in ld.matrix")
   if(any(is.na(trait.cor))) stop("there are missing values in trait.cor")
   if(any(is.na(sample.overlap))) stop("there are missing values in sample.overlap")
-
+  
+  if(!is.null(prior.12)){
+    prior.c = prior.12/(prior.1 + prior.12);
+  }
+  prior.2 = 1-prior.c;
   n.cvs = 1;
   test.2 = F;
   sentinel = 0;
@@ -1423,7 +1435,10 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
 #'
 #' print method for class "hyprcoloc"
 #' @param x an object of class "hyprcoloc"
-#' @author Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <james.staley@bristol.ac.uk>
+#' @author Christopher N Foley (University of Cambridge) <chris.neal.foley@gmail.com> and James R Staley (University of Bristol) <jrstaley95@gmail.com>
+#' @param ... Other arguments passed to or from other methods
+#'
+#' @export print.hyprcoloc
 #' @export
 print.hyprcoloc <- function(x, ...){
   cat("\nCall: \nhyprcoloc")
@@ -1431,3 +1446,6 @@ print.hyprcoloc <- function(x, ...){
   print(x$results)
   cat("\n")
 }
+
+# prevents R check throwing errors about unassigned global variables
+utils::globalVariables(c("colorRampPalette", "combn", "runif"))
