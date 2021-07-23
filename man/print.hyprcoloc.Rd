@@ -4,14 +4,16 @@
 \alias{print.hyprcoloc}
 \title{Print HyPrColoc}
 \usage{
-\method{print}{hyprcoloc}(x, ...)
+print.hyprcoloc(x, ...)
 }
 \arguments{
 \item{x}{an object of class "hyprcoloc"}
+
+\item{...}{Other arguments passed to or from other methods}
 }
 \description{
 print method for class "hyprcoloc"
 }
 \author{
-Christopher Foley <christopher.foley@mrc-bsu.cam.ac.uk> and James R Staley <jrstaley95@gmail.com>
+Christopher N Foley (University of Cambridge) <chris.neal.foley@gmail.com> and James R Staley (University of Bristol) <jrstaley95@gmail.com>
 }
