@@ -9,25 +9,29 @@ HyPrColoc is an efficient deterministic Bayesian divisive clustering algorithm u
 * hyprcoloc - identifies clusters of colocalized traits and candidate causal SNPs using the HyPrColoc Bayesian divisive clustering algorithm.
 
 ## Installation
-1. install.packages("devtools")
-2. library(devtools)
-3. install_github("jrs95/hyprcoloc", build_opts = c("--resave-data", "--no-manual"), build_vignettes = TRUE)
-4. library(hyprcoloc)
-5. browseVignettes("hyprcoloc")
+```
+install.packages("devtools")
+library(devtools)
+install_github("jrs95/hyprcoloc", build_opts = c("--resave-data", "--no-manual"), build_vignettes = TRUE)
+library(hyprcoloc)
+browseVignettes("hyprcoloc")
+```
 
 ## Example
-\# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)  
+```
+# Regression coefficients and standard errors from ten GWAS studies (Traits 1-5, 6-8 & 9-10 colocalize)  
 betas <- hyprcoloc::test.betas  
 head(betas)  
 ses <- hyprcoloc::test.ses  
 head(ses)  
   
-\# Trait names and SNP IDs  
+# Trait names and SNP IDs  
 traits <- paste0("T", 1:10)  
 rsid <- rownames(betas)  
 
-\# Colocalization analysis  
+# Colocalization analysis  
 hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)  
+```
 
 ## Citations
 * HyPrColoc: Foley CN, Staley JR, et al. A fast and efficient colocalization algorithm for identifying shared genetic risk factors across multiple traits. Nat Commun 2021; 12(1):764.
