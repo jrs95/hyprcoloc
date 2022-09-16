@@ -409,7 +409,7 @@ As something of a discussion point and an example of (ii), let's suppose interes
 
 ### Analysing correlated traits, continued... 
 
-Our command line tool can automatically compute trait correlation (using a tetrachoric correlation technique) and LD information. However, the R-package requires users to have this information to hand. 
+This requires the user to enter trait correlation (using a tetrachoric correlation technique) and LD matrices.  
 
 ```{r}
 # default assumption, presented for clarity:
