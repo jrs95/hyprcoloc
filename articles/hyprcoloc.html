@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="HyPrColoc">
 <meta property="og:description" content="hyprcoloc">
-<meta property="og:image" content="/logo.png">
+<meta property="og:image" content="https://jrs95.github.io/hyprcoloc/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -56,7 +56,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/jrs95/hyprcoloc/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -74,7 +81,7 @@ Foley &amp; James R Staley</h4>
             
             <h4 data-toc-skip class="date">2024-04-05</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/jrs95/hyprcoloc/blob/HEAD/vignettes/hyprcoloc.Rmd" class="external-link"><code>vignettes/hyprcoloc.Rmd</code></a></small>
       <div class="d-none name"><code>hyprcoloc.Rmd</code></div>
     </div>
 
@@ -107,14 +114,6 @@ between study participants. We recommend reading our note (below and in
 more detail our paper) on adjusting analyses to account for correlated
 summary data and a-priori trait correlation before doing so in your
 analyses.</p>
-<div class="section level3">
-<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span>, repos <span class="op">=</span> <span class="st">"http://cran.us.r-project.org"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"cnfoley/hyprcoloc"</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -125,8 +124,8 @@ region, a standard analysis requires data from two matrices, of equal
 size, denoting: (i) a matrix of effect estimates (betas), with the
 columns denoting the study traits and rows the snps, and; (ii) a matrix
 of corresponding standard errors (ses).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hyprcoloc</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jrs95/hyprcoloc" class="external-link">hyprcoloc</a></span><span class="op">)</span></span>
 <span><span class="va">betas</span> <span class="op">&lt;-</span> <span class="fu">hyprcoloc</span><span class="fu">::</span><span class="va">test.betas</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                      T1           T2            T3           T4           T5</span></span>
@@ -164,7 +163,7 @@ standard error data for around 1000 snps. The summary association data
 are weakly correlated, owing to generating data from studies containing
 overlapping participants (/samples). We can call the correlation and LD
 matrices by typing</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trait.cor</span> <span class="op">&lt;-</span> <span class="fu">hyprcoloc</span><span class="fu">::</span><span class="va">test.corr</span></span>
 <span><span class="va">ld.matrix</span> <span class="op">&lt;-</span> <span class="fu">hyprcoloc</span><span class="fu">::</span><span class="va">test.ld</span></span></code></pre></div>
 <p>Note that in the sample data, traits 1-5 form a cluster of
@@ -182,7 +181,7 @@ of colocalized traits. Each study (or trait) will be assigned a name
 corresponding to their column position and similarly the snps will be
 assigned names according to row position. To input trait and snp labels
 we make use of the “trait.names” and “snp.id” variables, e.g. </p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">traits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">rsid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
@@ -241,7 +240,7 @@ is continuous or binary. To let HyPrColoc know which traits are
 continuous (coded 0) or binary (coded 1) we use the “binary.outcome”
 variable. For example, suppose the first three traits are binary, then
 we type</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">binary.traits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, binary.outcomes <span class="op">=</span> <span class="va">binary.traits</span><span class="op">)</span></span>
 <span><span class="va">res</span></span>
@@ -265,7 +264,7 @@ we type</p>
 the traits. For example, let’s suppose interest lies in assessing the
 first two traits only, in this situation we make use of the
 “trait.subset” variable, e.g.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, trait.subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"T1"</span>, <span class="st">"T2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
@@ -289,11 +288,11 @@ a ‘list’ of results where the first element contains the results
 displayed previously and the second element containts the snp scores for
 each of the clusters of colocalized traits identified. Let’s have a
 look, if we now type</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, snpscores <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>then res is a list with two elements: “res[[1]]” and “res[[2]]”. The
 element “res[[1]]” contains the results from before, i.e.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;   iteration             traits posterior_prob regional_prob candidate_snp</span></span>
 <span><span class="co">#&gt; 1         1 T1, T2, T3, T4, T5         1.0000             1    rs11591147</span></span>
@@ -312,7 +311,7 @@ traits 1-5. “res[[2]][[2]]” returns the same information but now for the
 cluster of putatively colocalized traits 6-8 and “res[[2]][[3]]” for the
 cluster 9-10. For example, the first few snp scores for cluster 1
 (traits 1-5) are:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    rs6694014   rs11206477     rs978479    rs6684892  rs149881092    rs2081705 </span></span>
 <span><span class="co">#&gt; 4.109458e-67 3.004278e-68 5.637121e-67 6.486572e-68 6.063410e-66 5.765875e-67</span></span></code></pre></div>
@@ -322,7 +321,7 @@ a “credible set” of snps for each cluster which uses the output from the
 identifies a credible set of snps which explains 95% of the posterior
 probability of colocalization for each cluster of colocalized traits. We
 this using the “cred.sets” function, i.e.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cred.sets.html">cred.sets</a></span><span class="op">(</span><span class="va">res</span>, value <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; rs11591147 </span></span>
@@ -352,7 +351,7 @@ the second cluster of traits (6-8), there is no clear candidate causal
 variante as both “rs12117612” and “rs7532349” explain equal amounts of
 the posterior probability of colocalization and, as we now show, are in
 perfect LD with one another:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ld.matrix</span><span class="op">[</span><span class="st">"rs12117612"</span>, <span class="st">"rs7532349"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <p>Together these two variants explain nearly 90% of the posterior
@@ -469,7 +468,7 @@ repeatedly run HyPrColoc and for each run change the value <span class="math inl
 10^{-100}}\)</span>. If the number of traits in the sample were large we
 might consider selecting a cluster of traits with which to assess
 cluster stability.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prior.options</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">1e-10</span>, <span class="fl">1e-20</span>, <span class="fl">1e-25</span>, <span class="fl">1e-100</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">prior.options</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
@@ -626,7 +625,7 @@ i.e. <span class="math inline">\(prior.c=0.05\)</span>; (ii) 1 in 50,
 i.e. <span class="math inline">\(prior.c=0.02\)</span>; (iii) 1 in 100,
 i.e. <span class="math inline">\(prior.c=0.01\)</span>; (ii) 1 in 200,
 i.e. <span class="math inline">\(prior.c=0.005\)</span>,</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prior.1</span> <span class="op">&lt;-</span> <span class="fl">1e-4</span></span>
 <span><span class="va">prior.c.options</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.02</span>, <span class="fl">0.01</span>, <span class="fl">0.005</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">prior.c.options</span><span class="op">)</span> <span class="op">{</span></span>
@@ -756,7 +755,7 @@ defaults should be viewed as lower bounds.</p>
 certain posterior probability, more stringent regional and alignment
 threshold parameters can be chosen. For example if we set <span class="math inline">\(P_R^{\ast}=P_{A}^{\ast}=0.95\)</span> so that
 colocalized traits are identified when <span class="math inline">\(P_RP_{A}\geq 0.9025\)</span> we see that</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
 <span>  trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, uniform.priors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  reg.thresh <span class="op">=</span> <span class="fl">0.95</span>, align.thresh <span class="op">=</span> <span class="fl">0.95</span></span>
@@ -793,7 +792,7 @@ we can avoid this if we instead set both the regional and alignment
 statistics to the minimum posterior probability that determines that a
 cluster of traits are colocalized. Hence, in the above example we would
 instead set <span class="math inline">\(P_R^{\ast}=P_{A}^{\ast}=0.9025\)</span>, i.e. </p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
 <span>  trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, uniform.priors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  reg.thresh <span class="op">=</span> <span class="fl">0.9025</span>, align.thresh <span class="op">=</span> <span class="fl">0.9025</span></span>
@@ -833,13 +832,13 @@ the algorithms default settings and then increase these so that
 identification of clusters of colocalized traits becomes more
 challenging (i.e. traits must have stronger evidence of colocalization
 in order to be detected). For example</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sensitivity.plot.html">sensitivity.plot</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
 <span>  trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>,</span>
 <span>  reg.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span><span class="op">)</span>, align.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span><span class="op">)</span>, prior.c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.02</span>, <span class="fl">0.01</span>, <span class="fl">0.005</span><span class="op">)</span>, equal.thresholds <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="hyprcoloc_files/figure-html/unnamed-chunk-18-1.png" width="480"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p><img src="hyprcoloc_files/figure-html/unnamed-chunk-17-1.png" width="480"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Or by fixing the regional and aligment thresholds to be equal</span></span>
 <span><span class="co"># sensitivity.plot(betas, ses, trait.names = traits, snp.id=rsid,</span></span>
 <span><span class="co">#                  reg.thresh = c(0.6,0.7,0.8,0.9), prior.c = c(0.02, 0.01, 0.005), equal.thresholds = TRUE);</span></span></code></pre></div>
@@ -864,13 +863,13 @@ Although we have set the benchmark quite high, the two clusters 6-8 and
 making them reasonable candidates also. To see this we can require that
 “sensitivity.plot” returns the similarity matrix used to plot the
 heat-map:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sensitivity.plot.html">sensitivity.plot</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
 <span>  trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>,</span>
 <span>  reg.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span><span class="op">)</span>, align.thresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span><span class="op">)</span>, prior.c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.02</span>, <span class="fl">0.01</span>, <span class="fl">0.005</span><span class="op">)</span>, equal.thresholds <span class="op">=</span> <span class="cn">FALSE</span>, similarity.matrix <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="hyprcoloc_files/figure-html/unnamed-chunk-19-1.png" width="480"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<p><img src="hyprcoloc_files/figure-html/unnamed-chunk-18-1.png" width="480"></p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># heatmap is found by typing</span></span>
 <span><span class="va">heatmap.plot</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co"># (plotted previously)</span></span>
@@ -918,7 +917,7 @@ setting.</p>
 criteria<a class="anchor" aria-label="anchor" href="#assessing-differences-between-the-bayesian-divisive-clustering-criteria"></a>
 </h4>
 <p>The regional selection criterion:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, bb.selection <span class="op">=</span> <span class="st">"regional"</span><span class="op">)</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
@@ -934,7 +933,7 @@ criteria<a class="anchor" aria-label="anchor" href="#assessing-differences-betwe
 <span><span class="co">#&gt; attr(,"class")</span></span>
 <span><span class="co">#&gt; [1] "hyprcoloc"</span></span></code></pre></div>
 <p>The alignment selection criterion:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, bb.selection <span class="op">=</span> <span class="st">"align"</span><span class="op">)</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
@@ -957,7 +956,7 @@ using either the reginoal or the alignment selection criterion.</p>
 </h4>
 <p>We can choose to switch the Bayesian divisive clustering algorithm
 off and assess whether all traits colocalize.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, bb.alg <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
@@ -1005,12 +1004,12 @@ is likely to be anti-conservative and therefore should be increased). As
 an example, below we assess any evidence of regional associations
 between the traits in the sample dataset and we set the threshold
 regional association probability to be <span class="math inline">\(0.9\)</span>:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ptm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, bb.selection <span class="op">=</span> <span class="st">"reg.only"</span>, reg.thresh <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.02    0.02    0.04</span></span>
+<span><span class="co">#&gt;    0.05    0.00    0.05</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
 <span><span class="co">#&gt;   iteration              traits posterior_prob regional_prob candidate_snp</span></span>
@@ -1061,7 +1060,7 @@ traits at first 10 times: to build a dataset of 100 traits in which
 traits 1-50 form a cluster of colocalized traits, traits 51-80 form a
 second cluster of colocalized traits and finally traits 81-100 form a
 third cluster of colocalized traits, e.g.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 100 traits</span></span>
 <span><span class="co"># beta100 replicates the betas for clusters 1, 2 and 3 10 times</span></span>
 <span><span class="va">traits100</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span></span>
@@ -1083,7 +1082,7 @@ third cluster of colocalized traits, e.g.</p>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas100</span>, <span class="va">ses100</span>, trait.names <span class="op">=</span> <span class="va">traits100</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.71    0.17    0.87</span></span>
+<span><span class="co">#&gt;    0.80    0.09    0.91</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">traits</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">c</span> <span class="kw">in</span> <span class="va">clusters</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1118,7 +1117,7 @@ each of the candidate snps has increased meaning we have incresed
 confidence that we have identified the underlying causal variant (or one
 in perfect LD with it) and; (iii) HyPrColoc did this in under 1 second.
 Let’s do the same thing for 1000 traits,</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 1000 traits</span></span>
 <span><span class="va">traits1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">betas1000</span> <span class="op">&lt;-</span> <span class="va">ses1000</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
@@ -1139,7 +1138,7 @@ Let’s do the same thing for 1000 traits,</p>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas1000</span>, <span class="va">ses1000</span>, trait.names <span class="op">=</span> <span class="va">traits1000</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   78.44    7.19   86.75</span></span>
+<span><span class="co">#&gt;   52.29    5.19   57.75</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">traits</span><span class="op">)</span><span class="op">)</span></span>
@@ -1260,13 +1259,13 @@ computational cost of analyses which account for correlation.</p>
 </h4>
 <p>This requires the user to enter trait correlation (using a
 tetrachoric correlation technique) and LD matrices.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># default assumption, presented for clarity:</span></span>
 <span><span class="va">sample.overlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
 <h5 id="variant-specific-priors">Variant specific priors<a class="anchor" aria-label="anchor" href="#variant-specific-priors"></a>
 </h5>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">traits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">ptm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
@@ -1291,7 +1290,7 @@ tetrachoric correlation technique) and LD matrices.</p>
 <div class="section level5">
 <h5 id="conditionally-uniform-priors">Conditionally uniform priors<a class="anchor" aria-label="anchor" href="#conditionally-uniform-priors"></a>
 </h5>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>,</span>
 <span>  trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, trait.cor <span class="op">=</span> <span class="va">trait.cor</span>,</span>
 <span>  ld.matrix <span class="op">=</span> <span class="va">ld.matrix</span>, sample.overlap <span class="op">=</span> <span class="va">sample.overlap</span>, uniform.priors <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -1320,16 +1319,16 @@ traits 1-5; traits 6-8 and traits 9-10 form three clusters of
 colocalized traits and moreover we identified this at a fraction of the
 computational cost of accounting for correlations between summary
 data</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ptm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
 <span><span class="va">time.ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="va">time.ind</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.03    0.01    0.05</span></span>
+<span><span class="co">#&gt;    0.03    0.00    0.03</span></span>
 <span><span class="va">time.corr</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   69.89    0.54   71.08</span></span></code></pre></div>
+<span><span class="co">#&gt;   33.97    0.23   34.28</span></span></code></pre></div>
 <p>Thus, assuming independence between the studies not only correctly
 identifies the three clusters of colocalized traits, but does so around
 3500 times faster than accounting for non-indepdence.</p>
