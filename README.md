@@ -17,6 +17,9 @@ remotes::install_github("jrs95/hyprcoloc", build_vignettes = TRUE)
 
 ## Example
 ```
+# Library
+library(hyprcoloc)
+
 # Regression coefficients from ten studies (Traits 1-5, 6-8 & 9-10 colocalize)
 betas <- hyprcoloc::test.betas
 head(betas)
