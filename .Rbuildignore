@@ -1,0 +1,7 @@
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^.*\.Rproj$
+^\.Rproj\.user$
+vignettes/
+^\.github$

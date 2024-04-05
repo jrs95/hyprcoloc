@@ -1,0 +1,22 @@
+
+bibentry(
+  bibtype = "Article",
+  header = "To cite `hyprcoloc` in publications please use:",
+  author = c(
+    person("C.N.", "Foley"),
+    person("J.R.", "Staley"),
+    person("P.G.", "Green"),
+    person("B.B.", "Sun"),
+    person("P.D.W.", "Kirk"),
+    person("S.", "Burgess"),
+    person("J.M.M.", "Howson")
+  ),
+  title = "A fast and efficient colocalization algorithm for identifying shared genetic risk factors across multiple traits",
+  year = 2021,
+  key = "hyprcoloc",
+  doi = "10.1038/s41467-020-20885-8",
+  journal = "Nature Communications",
+  volume = 12,
+  number = 1,
+  pages = "764"
+)
