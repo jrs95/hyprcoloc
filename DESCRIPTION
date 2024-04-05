@@ -1,16 +1,45 @@
 Package: hyprcoloc
 Title: Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) 
-Version: 1.0
-Date: 15-12-2020
-Author: Christopher N Foley and James R Staley
-Maintainer: Christopher N Foley <chris.neal.foley@gmail.com> and James R Staley <jrstaley95@gmail.com>
+Version: 0.0.2
+Date: 05-04-2024
+Authors@R: c(
+    person(
+        given = "Christopher",
+        family = "Foley",
+        email = "chris.neal.foley@gmail.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0002-0970-2610")
+    ),
+    person(
+        given = "James",
+        family = "Staley",
+        email = "jrstaley95@gmail.com",
+        role = c("aut", "ctb"),
+        comment = c(ORCID = "0009-0001-9520-5011")
+    )
+  )
 Description: This package is used to perform multi-trait colocalization analyses using HyPrColoc. 
-Depends: R (>= 3.4.0), methods
-License: GPL (>= 2)
-ByteCompile: TRUE
-LazyData: TRUE
+License: GPL-3
+Depends:
+    R (>= 3.6.0)
+Imports:
+    iterpc,
+    Rcpp,
+    RcppEigen,
+    Rmpfr,
+    compiler,
+    Matrix,
+    knitr,
+    rmarkdown,
+    pheatmap,
+    RColorBrewer
+LinkingTo:
+    Rcpp,
+    RcppEigen
+Suggests:
+    knitr
 Encoding: UTF-8
-Imports: iterpc, Rcpp, RcppEigen, Rmpfr, compiler, Matrix, knitr, rmarkdown, pheatmap, RColorBrewer
-LinkingTo: Rcpp, RcppEigen
+ByteCompile: true
+LazyData: true
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1

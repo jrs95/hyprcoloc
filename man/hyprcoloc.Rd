@@ -92,13 +92,13 @@ betas <- hyprcoloc::test.betas
 head(betas)
 ses <- hyprcoloc::test.ses
 head(ses)
-  
+
 # Trait names and SNP IDs
 traits <- paste0("T", 1:10)
 rsid <- rownames(betas)
 
 # Colocalisation analyses
-results <- hyprcoloc(betas, ses, trait.names=traits, snp.id=rsid)
+results <- hyprcoloc(betas, ses, trait.names = traits, snp.id = rsid)
 }
 \author{
 Christopher N Foley <chris.neal.foley@gmail.com> and James R Staley <jrstaley95@gmail.com>
