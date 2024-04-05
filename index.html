@@ -96,7 +96,10 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<pre><code><span><span class="co"># Regression coefficients from ten studies (Traits 1-5, 6-8 &amp; 9-10 colocalize)</span></span>
+<pre><code><span><span class="co"># Library</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jrs95/hyprcoloc" class="external-link">hyprcoloc</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Regression coefficients from ten studies (Traits 1-5, 6-8 &amp; 9-10 colocalize)</span></span>
 <span><span class="va">betas</span> <span class="op">&lt;-</span> <span class="fu">hyprcoloc</span><span class="fu">::</span><span class="va">test.betas</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span></span>
 <span><span class="va">ses</span> <span class="op">&lt;-</span> <span class="fu">hyprcoloc</span><span class="fu">::</span><span class="va">test.ses</span></span>
