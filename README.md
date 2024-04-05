@@ -31,6 +31,5 @@ rsid <- rownames(betas)
 hyprcoloc(betas, ses, trait.names = traits, snp.id = rsid)
 ```
 
-## Citations
-* Foley CN, Staley JR, *et al.* A fast and efficient colocalization algorithm for identifying shared genetic risk factors across multiple traits. [Nat Commun](https://pubmed.ncbi.nlm.nih.gov/33536417/) 2021;12(1):764.  
-* HyPrColoc software: Foley CN and Staley JR. (2020, November 27). cnfoley/hyprcoloc: First release of software (Version v1.0.0). Zenodo. http://doi.org/10.5281/zenodo.4293559  
+## Citation
+Foley CN, Staley JR, *et al.* A fast and efficient colocalization algorithm for identifying shared genetic risk factors across multiple traits. [Nat Commun](https://pubmed.ncbi.nlm.nih.gov/33536417/) 2021;12(1):764.  
