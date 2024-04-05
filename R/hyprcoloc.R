@@ -7,7 +7,7 @@
 #' @param p.1 probability of one trait having a causal variant in the genetic region
 #' @param gamma step probability
 #' @param k number of traits
-#' @export
+#' @noRd
 prior <- function(p.1, gamma, k) {
   if (k == 1) {
     p.1
@@ -26,7 +26,7 @@ prior <- function(p.1, gamma, k) {
 #'
 #' @param j number of traits
 #' @param Q number of SNPs
-#' @export
+#' @noRd
 p.0 <- function(j, Q) {
   (j - 1) * Q - j * (j - 1) / 2 + 1
 }
@@ -35,7 +35,7 @@ p.0 <- function(j, Q) {
 #'
 #' @param Q the number of traits
 #' @param snp.scores vector of per snp contributions to the posterior probability of colocalization
-#' @export
+#' @noRd
 ind.snp.score <- function(Q, snp.scores) {
   loc <- vector("numeric", Q - 1)
   res <- vector("numeric", Q)
@@ -70,7 +70,7 @@ ind.snp.score <- function(Q, snp.scores) {
 #' @param sentinel sentinel variant
 #' @param Zsq matrix of Z-scores squared
 #' @param Wsq matrix of W squared
-#' @export
+#' @noRd
 samp.reduc <- function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.size = dim(Z)[1], sentinel = 0, Zsq, Wsq) {
   q <- dim(Z)[1]
   Z <- Z[, trts]
@@ -132,22 +132,25 @@ samp.reduc <- function(Z, W, ld.matrix, trait.cor, sample.overlap, trts, window.
 #' colMax
 #'
 #' @param x data.frame or matrix
-#' @export
+#' @noRd
 colMax <- function(x) {
   apply(x, MARGIN = c(2), max)
 }
 
 
 ################################################################################
-##### Compute credible sets of snps for each clusetr of colocalized traits #####
+##### Compute credible sets of snps for each cluster of colocalized traits #####
 ################################################################################
 
-#' cred.sets
+#' Credible sets
 #'
+#' `cred.sets` computes credible sets of SNPs for each cluster of colocalized traits
+#' @name cred.sets
 #' @param res list of results from hyprcoloc when setting "snpscores = TRUE"
 #' @param value the sum of the probabilities of the snps included in the credible set
+#' @author Christopher Foley <chris.neal.foley@gmail.com> & James Staley <jrstaley95@gmail.com>
 #' @export
-
+#' @md
 cred.sets <- function(res, value = 0.95) {
   clusters <- which(!is.na(res[[1]]$traits))
   results <- vector("list", length(clusters))
@@ -180,9 +183,10 @@ cred.sets <- function(res, value = 0.95) {
 ##### Perform a sensitivity analysis by varying the algorithm (regional and alignment) thresholds and coloclaization prior (prior.c)  #####
 ###########################################################################################################################################
 
-#' sensitivity.plot
+#' Sensitivity plot
 #'
-#' sensitivity.plot is a function which repeatedly calls the hyprcoloc function to compute a similarity matrix which illustrates how strongly clustered/colocalized pairs of traits are across different input thresholds and priors
+#' `sensitivity.plot` is a function which repeatedly calls the hyprcoloc function to compute a similarity matrix which illustrates how strongly clustered/colocalized pairs of traits are across different input thresholds and priors
+#' @name sensitivity.plot
 #' @param effect.est matrix of snp regression coefficients (i.e. regression beta values) in the genomic region
 #' @param effect.se matrix of standard errors associated with the beta values
 #' @param binary.outcomes a binary vector of dimension the number of traits: 1 represents a binary trait 0 otherwise
@@ -205,7 +209,9 @@ cred.sets <- function(res, value = 0.95) {
 #' @param equal.thresholds fix the regional and alignment thresholds to be equal
 #' @param similarity.matrix To be viewed as a similarity matrix. Default FALSE.
 #' @import pheatmap RColorBrewer
+#' @author Christopher Foley <chris.neal.foley@gmail.com> & James Staley <jrstaley95@gmail.com>
 #' @export
+#' @md
 sensitivity.plot <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]),
                              trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]),
                              snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
@@ -320,7 +326,7 @@ sensitivity.plot <- function(effect.est, effect.se, binary.outcomes = rep(0, dim
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param uniform.priors uniform priors
-#' @export
+#' @noRd
 rapid.reg <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
   m <- dim(Zsq)[2]
   Q <- dim(Zsq)[1]
@@ -380,7 +386,7 @@ rapid.reg <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
 #' @param Zsq matrix of Z-scores squared
 #' @param Wsq matrix of W squared
 #' @param ind.traits are the traits independent or to be treated as independent
-#' @export
+#' @noRd
 regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon, reg.thresh, prior.1, prior.2, prior.3, prior.4, flag, test.2, reg.steps, cor.adj.priors, uniform.priors, branch.jump, Zsq, Wsq, ind.traits) {
   m <- dim(Z)[2]
   Q <- dim(Z)[1]
@@ -566,7 +572,7 @@ regional.ABF <- function(Z, W, snps.clc, rho, trait.cor, sample.overlap, epsilon
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param uniform.priors uniform priors
-#' @export
+#' @noRd
 rapid.align <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
   m <- dim(Zsq)[2]
   Q <- dim(Zsq)[1]
@@ -629,7 +635,7 @@ rapid.align <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
 #' @param Zsq matrix of Z-scores squared
 #' @param Wsq matrix of W squared
 #' @param ind.traits are the traits independent or to be treated as independent
-#' @export
+#' @noRd
 align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix, epsilon, reg.res, align.thresh, prior.1, prior.2, cor.adj.priors, uniform.priors, Zsq, Wsq, ind.traits) {
   m <- dim(Z)[2]
   Q <- dim(Z)[1]
@@ -737,7 +743,7 @@ align.ABF.1 <- function(Z, W, trait.cor, sample.overlap, ld.matrix, epsilon, reg
 #' @param prior.4 1 - prior probability that trait two co-localises with trait one given traits one and two already share a causal variant and trait one contains a second causal variant
 #' @param cor.adj.priors correlation adjusted priors
 #' @param uniform.priors uniform priors
-#' @export
+#' @noRd
 align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, epsilon, reg.res, align.thresh, prior.1, prior.2, prior.3, prior.4, cor.adj.priors, uniform.priors) {
   m <- dim(Z)[2]
   Q <- dim(Z)[1]
@@ -886,7 +892,7 @@ align.ABF.2 <- function(Z, W, snps.clc, trait.cor, sample.overlap, ld.matrix, ep
 #' @param prior.1 prior probability of a SNP being associated with one trait
 #' @param prior.2 1 - prior probability of a SNP being associated with an additional trait given that the SNP is associated with at least 1 other trait
 #' @param uniform.priors uniform priors
-#' @export
+#' @noRd
 rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
   m <- dim(Zsq)[2]
   Q <- dim(Zsq)[1]
@@ -940,7 +946,8 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
 
 #' HyPrColoc
 #'
-#' hyprcoloc is a function used to identify clusters of colocalized traits and candidate causal SNPs in genomic regions
+#' `hyprcoloc` is a function used to identify clusters of colocalized traits and candidate causal SNPs in genomic regions
+#' @name hyprcoloc
 #' @param effect.est matrix of snp regression coefficients (i.e. regression beta values) in the genomic region
 #' @param effect.se matrix of standard errors associated with the beta values
 #' @param binary.outcomes a binary vector of dimension the number of traits: 1 represents a binary trait 0 otherwise
@@ -965,12 +972,10 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
 #' @param ind.traits are the traits independent or to be treated as independent
 #' @param snpscores output estimated posterior probability explained each SNP
 #' @return A data.frame of HyPrColoc results: each row is a cluster of colocalized traits or is coded NA (if no colocalization is identified)
-#' @return If snpscores=TRUE: additionally returns a list of posterior probability explained by each SNPs and for each cluster of colocalized traits identified
+#' @return If snpscores = TRUE: additionally returns a list of posterior probability explained by each SNPs and for each cluster of colocalized traits identified
 #' @import compiler Rmpfr iterpc
-#' @rawNamespace import(Matrix, except=c(.__C__atomicVector, tcrossprod, crossprod))
 #' @importFrom Rcpp evalCpp
 #' @useDynLib hyprcoloc
-#' @author Christopher N Foley <chris.neal.foley@gmail.com> and James R Staley <jrstaley95@gmail.com>
 #' @examples
 #' # Regression coefficients and standard errors from ten GWAS studies
 #' # (Traits 1-5, 6-8 & 9-10 are the clusters of colocalized traits)
@@ -985,7 +990,9 @@ rapid.hyprcoloc <- function(Zsq, Wsq, prior.1, prior.2, uniform.priors) {
 #'
 #' # Colocalisation analyses
 #' results <- hyprcoloc(betas, ses, trait.names = traits, snp.id = rsid)
+#' @author Christopher Foley <chris.neal.foley@gmail.com> & James Staley <jrstaley95@gmail.com>
 #' @export
+#' @md
 hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect.est)[2]),
                       trait.subset = c(1:dim(effect.est)[2]), trait.names = c(1:dim(effect.est)[2]),
                       snp.id = c(1:dim(effect.est)[1]), ld.matrix = diag(1, dim(effect.est)[1], dim(effect.est)[1]),
@@ -1556,15 +1563,14 @@ hyprcoloc <- function(effect.est, effect.se, binary.outcomes = rep(0, dim(effect
   return(results)
 }
 
-#' Print HyPrColoc
+#' Print hyprcoloc
 #'
-#' print method for class "hyprcoloc"
-#' @param x an object of class "hyprcoloc"
-#' @author Christopher N Foley (University of Cambridge) <chris.neal.foley@gmail.com> and James R Staley (University of Bristol) <jrstaley95@gmail.com>
-#' @param ... Other arguments passed to or from other methods
-#'
-#' @export print.hyprcoloc
+#' print method for class `"hyprcoloc"`.
+#' @name print.hyprcoloc
+#' @param x an object of class `"hyprcoloc"`
+#' @author Christopher Foley <chris.neal.foley@gmail.com> & James Staley <jrstaley95@gmail.com>
 #' @export
+#' @md
 print.hyprcoloc <- function(x, ...) {
   cat("\nCall: \nhyprcoloc")
   cat("\n\nResults:\n")
@@ -1573,4 +1579,4 @@ print.hyprcoloc <- function(x, ...) {
 }
 
 # prevents R check throwing errors about unassigned global variables
-utils::globalVariables(c("colorRampPalette", "combn", "runif"))
+# utils::globalVariables(c("colorRampPalette", "combn", "runif"))

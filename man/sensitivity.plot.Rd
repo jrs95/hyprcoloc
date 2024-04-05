@@ -2,7 +2,7 @@
 % Please edit documentation in R/hyprcoloc.R
 \name{sensitivity.plot}
 \alias{sensitivity.plot}
-\title{sensitivity.plot}
+\title{Sensitivity plot}
 \usage{
 sensitivity.plot(
   effect.est,
@@ -72,5 +72,8 @@ sensitivity.plot(
 \item{similarity.matrix}{To be viewed as a similarity matrix. Default FALSE.}
 }
 \description{
-sensitivity.plot is a function which repeatedly calls the hyprcoloc function to compute a similarity matrix which illustrates how strongly clustered/colocalized pairs of traits are across different input thresholds and priors
+\code{sensitivity.plot} is a function which repeatedly calls the hyprcoloc function to compute a similarity matrix which illustrates how strongly clustered/colocalized pairs of traits are across different input thresholds and priors
+}
+\author{
+Christopher Foley \href{mailto:chris.neal.foley@gmail.com}{chris.neal.foley@gmail.com} & James Staley \href{mailto:jrstaley95@gmail.com}{jrstaley95@gmail.com}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hyprcoloc.R
 \name{cred.sets}
 \alias{cred.sets}
-\title{cred.sets}
+\title{Credible sets}
 \usage{
 cred.sets(res, value = 0.95)
 }
@@ -12,5 +12,8 @@ cred.sets(res, value = 0.95)
 \item{value}{the sum of the probabilities of the snps included in the credible set}
 }
 \description{
-cred.sets
+\code{cred.sets} computes credible sets of SNPs for each cluster of colocalized traits
+}
+\author{
+Christopher Foley \href{mailto:chris.neal.foley@gmail.com}{chris.neal.foley@gmail.com} & James Staley \href{mailto:jrstaley95@gmail.com}{jrstaley95@gmail.com}
 }

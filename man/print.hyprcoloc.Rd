@@ -2,18 +2,16 @@
 % Please edit documentation in R/hyprcoloc.R
 \name{print.hyprcoloc}
 \alias{print.hyprcoloc}
-\title{Print HyPrColoc}
+\title{Print hyprcoloc}
 \usage{
-print.hyprcoloc(x, ...)
+\method{print}{hyprcoloc}(x, ...)
 }
 \arguments{
-\item{x}{an object of class "hyprcoloc"}
-
-\item{...}{Other arguments passed to or from other methods}
+\item{x}{an object of class \code{"hyprcoloc"}}
 }
 \description{
-print method for class "hyprcoloc"
+print method for class \code{"hyprcoloc"}.
 }
 \author{
-Christopher N Foley (University of Cambridge) <chris.neal.foley@gmail.com> and James R Staley (University of Bristol) <jrstaley95@gmail.com>
+Christopher Foley \href{mailto:chris.neal.foley@gmail.com}{chris.neal.foley@gmail.com} & James Staley \href{mailto:jrstaley95@gmail.com}{jrstaley95@gmail.com}
 }
