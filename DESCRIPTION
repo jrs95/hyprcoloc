@@ -45,4 +45,3 @@ ByteCompile: true
 LazyData: true
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr
-URL: https://jrs95.github.io/hyprcoloc/
