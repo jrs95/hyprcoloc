@@ -30,18 +30,9 @@ HyPrColoc is Bayesian divisive clustering algorithm for identifying clusters of 
 
 Traits can be either continuous, e.g. blood pressure, or discrete, e.g. a disease. Basic analyses require information on the summarized effect estimates (i.e. estimated regression coefficients) and their corresponding standard errors for each snp in the genomic region and each trait under consideration. These should be entered as numeric matrices. If the traits are measured in non-independent studies (i.e. those containing overlapping participants) analyses can be adjusted to account for this. To do this three additional matrices are required: (i) the pair-wise marginal correlations between the traits; (ii) the pair-wise LD estimates between the snps in the region and; (iii) the pair-wise estimates of the proportion of sample overlap between study participants. We recommend reading our note (below and in more detail our paper) on adjusting analyses to account for correlated summary data and a-priori trait correlation before doing so in your analyses. 
 
-## Installation
-
 ```{r, echo=F}
 options(warn = -1)
 ```
-
-```{r, eval=F}
-install.packages("devtools", repos = "http://cran.us.r-project.org")
-library(devtools)
-install_github("cnfoley/hyprcoloc")
-```
-
 
 # Getting started
 
