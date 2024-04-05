@@ -3,5 +3,5 @@
 ^pkgdown$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-vignettes/
 ^\.github$
+^LICENSE$
