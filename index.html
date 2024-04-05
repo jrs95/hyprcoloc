@@ -79,11 +79,17 @@
 <p>Genome-wide association studies (GWAS) have identified thousands of genomic regions affecting complex diseases. The next challenge is to elucidate the causal genes and mechanisms involved. One approach is to use statistical colocalization to assess shared genetic aetiology across multiple related traits (e.g. molecular traits, metabolic pathways and complex diseases) to identify causal pathways, prioritize causal variants and evaluate pleiotropy.</p>
 <p>HyPrColoc is an efficient deterministic Bayesian divisive clustering algorithm using GWAS summary statistics that can detect colocalization across vast numbers of traits simultaneously.</p>
 <div class="section level2">
-<h2 id="function">Function<a class="anchor" aria-label="anchor" href="#function"></a>
+<h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
 </h2>
 <ul>
 <li>
-<code>hyprcoloc</code>: identifies clusters of colocalized traits and candidate causal SNPs using the HyPrColoc Bayesian divisive clustering algorithm.</li>
+<code>hyprcoloc</code>: identifies clusters of colocalized traits and candidate causal SNPs using the HyPrColoc Bayesian divisive clustering algorithm.<br>
+</li>
+<li>
+<code>sensitivity_plot</code>: plots a heatmap to visuale how stable the clusters of colocalized traits are to variations in the algorithms input parameters.<br>
+</li>
+<li>
+<code>cred.sets</code>: computes credible sets of SNPs for each cluster of colocalized traits.</li>
 </ul>
 </div>
 <div class="section level2">

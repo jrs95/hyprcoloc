@@ -76,8 +76,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>HyPrColoc</h1>
-                        <h4 data-toc-skip class="author">Christopher N
-Foley &amp; James R Staley</h4>
+                        <h4 data-toc-skip class="author">Christopher
+Foley &amp; James Staley</h4>
             
             <h4 data-toc-skip class="date">2024-04-05</h4>
       
@@ -1009,7 +1009,7 @@ regional association probability to be <span class="math inline">\(0.9\)</span>:
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas</span>, <span class="va">ses</span>, trait.names <span class="op">=</span> <span class="va">traits</span>, snp.id <span class="op">=</span> <span class="va">rsid</span>, bb.selection <span class="op">=</span> <span class="st">"reg.only"</span>, reg.thresh <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.05    0.00    0.05</span></span>
+<span><span class="co">#&gt;    0.03    0.00    0.03</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; $results</span></span>
 <span><span class="co">#&gt;   iteration              traits posterior_prob regional_prob candidate_snp</span></span>
@@ -1082,7 +1082,7 @@ third cluster of colocalized traits, e.g.</p>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas100</span>, <span class="va">ses100</span>, trait.names <span class="op">=</span> <span class="va">traits100</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.80    0.09    0.91</span></span>
+<span><span class="co">#&gt;    0.73    0.11    0.84</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">traits</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">c</span> <span class="kw">in</span> <span class="va">clusters</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1138,7 +1138,7 @@ Let’s do the same thing for 1000 traits,</p>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hyprcoloc.html">hyprcoloc</a></span><span class="op">(</span><span class="va">betas1000</span>, <span class="va">ses1000</span>, trait.names <span class="op">=</span> <span class="va">traits1000</span>, snp.id <span class="op">=</span> <span class="va">rsid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   52.29    5.19   57.75</span></span>
+<span><span class="co">#&gt;   61.88    5.86   67.98</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="co"># print the number of traits in each cluster</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">traits</span><span class="op">)</span><span class="op">)</span></span>
@@ -1325,10 +1325,10 @@ data</p>
 <span><span class="va">time.ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ptm</span></span>
 <span><span class="va">time.ind</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.03    0.00    0.03</span></span>
+<span><span class="co">#&gt;    0.05    0.00    0.04</span></span>
 <span><span class="va">time.corr</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   33.97    0.23   34.28</span></span></code></pre></div>
+<span><span class="co">#&gt;   38.43    0.19   38.73</span></span></code></pre></div>
 <p>Thus, assuming independence between the studies not only correctly
 identifies the three clusters of colocalized traits, but does so around
 3500 times faster than accounting for non-indepdence.</p>
