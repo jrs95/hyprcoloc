@@ -5,7 +5,7 @@ Genome-wide association studies (GWAS) have identified thousands of genomic regi
 
 HyPrColoc is an efficient deterministic Bayesian divisive clustering algorithm using GWAS summary statistics that can detect colocalization across vast numbers of traits simultaneously.  
 
-## Functions
+## Function
 * `hyprcoloc`: identifies clusters of colocalized traits and candidate causal SNPs using the HyPrColoc Bayesian divisive clustering algorithm.  
 
 ## Installation
