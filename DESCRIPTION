@@ -1,7 +1,7 @@
 Package: hyprcoloc
 Title: Hypothesis Prioritisation in multi-trait Colocalization (HyPrColoc) 
 Version: 0.0.2
-Date: 05-04-2024
+Date: 08-04-2024
 Authors@R: c(
     person(
         given = "Christopher",

@@ -7,7 +7,7 @@ HyPrColoc is an efficient deterministic Bayesian divisive clustering algorithm u
 
 ## Functions
 * `hyprcoloc`: identifies clusters of colocalized traits and candidate causal SNPs using the HyPrColoc Bayesian divisive clustering algorithm.  
-* `sensitivity_plot`: plots a heatmap to visuale how stable the clusters of colocalized traits are to variations in the algorithms input parameters.  
+* `sensitivity_plot`: plots a heatmap to visualise how stable the clusters of colocalized traits are to variations in the algorithms input parameters.  
 * `cred.sets`: computes credible sets of SNPs for each cluster of colocalized traits.  
 
 ## Installation
